@@ -4,10 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="254ab7c8-544e-453f-81c9-4792b24938b0" name="Changes" comment="lab3">
+    <list default="true" id="254ab7c8-544e-453f-81c9-4792b24938b0" name="Changes" comment="lab5">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/migrations/0001_initial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/templates/shop/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/templates/shop/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/templates/shop/page1.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/templates/shop/page2.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/templates/shop/page3.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shop/templates/shop/page4.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shop/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/shop/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +38,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="SOFT" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -71,6 +83,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Illia\PycharmProjects\DjangoProject1\shop\templates\shop" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="DjangoProject1" type="Python.DjangoServer" factoryName="Django server">
       <module name="DjangoProject1" />
@@ -117,6 +134,8 @@
       <workItem from="1772797075112" duration="63000" />
       <workItem from="1774611410838" duration="3466000" />
       <workItem from="1775213006963" duration="2324000" />
+      <workItem from="1776423993708" duration="4688000" />
+      <workItem from="1776943784844" duration="9269000" />
     </task>
     <task id="LOCAL-00001" summary="lab2">
       <option name="closed" value="true" />
@@ -142,15 +161,63 @@
       <option name="project" value="LOCAL" />
       <updated>1774611872030</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="lab5">
+      <option name="closed" value="true" />
+      <created>1776952684761</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1776952684761</updated>
+    </task>
+    <task id="LOCAL-00005" summary="lab5">
+      <option name="closed" value="true" />
+      <created>1776952843740</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1776952843740</updated>
+    </task>
+    <task id="LOCAL-00006" summary="lab5">
+      <option name="closed" value="true" />
+      <created>1776953164767</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1776953164767</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="lab2" />
     <MESSAGE value="lab3" />
-    <option name="LAST_COMMIT_MESSAGE" value="lab3" />
+    <MESSAGE value="lab5" />
+    <option name="LAST_COMMIT_MESSAGE" value="lab5" />
   </component>
 </project>
