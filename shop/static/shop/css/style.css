@@ -13,13 +13,14 @@ body {
     min-height: 100vh;
 }
 
-/* Хедер - Верхня зелена панель */
+/* Хедер - Верхня зелена панель (без логотипа, тільки контакти) */
 .header-top {
     background-color: var(--agro-green);
     color: white;
     padding: 15px 50px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end; /* Вирівнюємо контакти по правому краю */
+    gap: 50px; /* Відступ між телефоном і адресою */
     align-items: center;
 }
 
