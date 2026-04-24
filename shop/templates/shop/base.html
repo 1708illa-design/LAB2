@@ -7,21 +7,28 @@
     <link rel="stylesheet" href="{% static 'shop/css/style.css' %}">
 </head>
 <body>
-
     <header class="header-top">
-        <div class="header-info-block">
-            <span class="info-icon">📞</span>
-            <div class="info-text">
-                <strong>Дзвоніть з 09:00 до 18:00</strong>
-                0 (99) 646-18-61, 0 (67) 000-00-00
+        <a href="/" class="header-logo-link">
+            <span class="logo-emoji">🌱</span>
+            <div class="logo-text-block">
+                <span class="logo-title">AGRIS</span>
+                <span class="logo-subtitle">Магазин насіння</span>
             </div>
-        </div>
-
-        <div class="header-info-block">
-            <span class="info-icon">📍</span>
-            <div class="info-text">
-                <strong>Магазин «Agris»</strong>
-                Україна, м. Луцьк, вул. Соборності, 14
+        </a>
+        <div class="header-contacts-wrapper">
+            <div class="header-info-block">
+                <span class="info-icon">📞</span>
+                <div class="info-text">
+                    <strong>Дзвоніть з 09:00 до 18:00</strong>
+                    0 (99) 646-18-61
+                </div>
+            </div>
+            <div class="header-info-block">
+                <span class="info-icon">📍</span>
+                <div class="info-text">
+                    <strong>Магазин «Agris»</strong>
+                    м. Луцьк, вул. Соборності, 14
+                </div>
             </div>
         </div>
     </header>
@@ -44,15 +51,13 @@
                 <a href="/category/{{ cat.id }}/" class="sidebar-item">🌿 {{ cat.name }}</a>
             {% endfor %}
         </aside>
-
         <main class="main-content">
             {% block content %}{% endblock %}
         </main>
     </div>
 
     <footer>
-        <p>© 2026 Агромагазин AGRIS. Всі права захищені.<br></p>
+        <p>© 2026 Агромагазин AGRIS. Всі права захищені.</p>
     </footer>
-
 </body>
 </html>

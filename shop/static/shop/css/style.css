@@ -1,90 +1,68 @@
+/* --- ЗМІННІ ТА БАЗА --- */
 :root {
     --agro-green: #5eb14a;
     --dark-green: #2d5a27;
     --text-gray: #333;
 }
+body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: #f5f5f5; display: flex; flex-direction: column; min-height: 100vh; }
 
-body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 0;
-    background-color: #f5f5f5;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* Хедер - Верхня зелена панель (без логотипа, тільки контакти) */
+/* --- ШАПКА ТА ЛОГОТИП --- */
 .header-top {
     background-color: var(--agro-green);
     color: white;
     padding: 15px 50px;
     display: flex;
-    justify-content: flex-end; /* Вирівнюємо контакти по правому краю */
-    gap: 50px; /* Відступ між телефоном і адресою */
+    justify-content: space-between;
     align-items: center;
 }
+.header-logo-link { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
+.logo-emoji { font-size: 40px; line-height: 1; }
+.logo-text-block { line-height: 1.1; }
+.logo-title { font-size: 26px; font-weight: 900; letter-spacing: 1px; display: block; }
+.logo-subtitle { font-size: 11px; font-weight: bold; text-transform: uppercase; display: block; }
 
+.header-contacts-wrapper { display: flex; gap: 40px; }
 .header-info-block { display: flex; align-items: center; gap: 15px; }
 .info-icon { font-size: 24px; }
 .info-text { font-size: 13px; line-height: 1.4; }
 .info-text strong { display: block; font-size: 15px; }
 
-/* Хедер - Біле меню */
-.header-bottom {
-    background: white;
-    padding: 0 50px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: flex-end;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
+/* --- МЕНЮ ТА НАВІГАЦІЯ --- */
+.header-bottom { background: white; padding: 0 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: flex-end; position: sticky; top: 0; z-index: 1000; }
 .main-nav { display: flex; list-style: none; margin: 0; padding: 0; }
-.main-nav a {
-    color: var(--text-gray);
-    text-decoration: none;
-    padding: 20px 15px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: 0.3s;
-}
+.main-nav a { color: var(--text-gray); text-decoration: none; padding: 20px 15px; font-size: 13px; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
 .main-nav a:hover { color: var(--agro-green); background: #f9f9f9; }
 
-/* Контент */
+/* --- КАРКАС --- */
 .container { display: flex; padding: 30px 50px; gap: 30px; flex: 1; }
-
-/* Бокове меню */
-.sidebar {
-    width: 260px;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    height: fit-content;
-}
+.sidebar { width: 260px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: fit-content; }
 .sidebar-header { background: var(--agro-green); color: white; padding: 15px; font-weight: bold; text-align: center; }
 .sidebar-item { padding: 12px 20px; border-bottom: 1px solid #eee; color: var(--text-gray); text-decoration: none; display: block; transition: 0.3s; }
 .sidebar-item:hover { background: #f1f8ef; color: var(--agro-green); padding-left: 25px; }
-
 .main-content { flex: 1; }
+footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; margin-top: 50px; }
 
-/* Стилі для кнопок пагінації */
-.p-link {
-    text-decoration: none;
-    color: #555;
-    background: white;
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-    transition: 0.3s;
-    margin: 0 3px;
-}
+/* --- ТОВАРИ (index.html) --- */
+.section-title { color: #333; border-bottom: 2px solid var(--agro-green); padding-bottom: 10px; margin-top: 0; }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+.product-card { border: 1px solid #eee; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: #fff; transition: 0.3s; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.product-image-placeholder { height: 150px; background: #fdfdfd; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #ccc; font-size: 60px; }
+.product-title { font-size: 17px; color: var(--dark-green); height: 45px; overflow: hidden; margin-bottom: 10px; }
+.product-price { font-size: 20px; color: #e74c3c; font-weight: bold; margin-bottom: 5px; }
+.product-category { font-size: 12px; color: #777; margin-bottom: 15px; }
+.btn-buy { background: var(--agro-green); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+.btn-buy:hover { background: var(--dark-green); }
+
+/* --- ПАГІНАЦІЯ --- */
+.pagination-wrapper { margin-top: 50px; text-align: center; padding-bottom: 40px; }
+.pagination-box { display: inline-block; background: #fff; padding: 10px 25px; border-radius: 50px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.p-link { text-decoration: none; color: #555; background: white; padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; font-size: 14px; font-weight: bold; transition: 0.3s; margin: 0 3px; }
 .p-link:hover { background-color: var(--agro-green); color: white; border-color: var(--agro-green); }
 
-/* Футер */
-footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; margin-top: 50px; }
+/* --- СТОРІНКИ ТА КАБІНЕТ --- */
+.page-title { color: var(--dark-green); margin-top: 0; margin-bottom: 20px; }
+.info-card { background: #f9f9f9; padding: 20px 25px; border-radius: 10px; border-left: 5px solid var(--agro-green); box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+.cabinet-wrapper { text-align: center; padding: 50px; border: 2px dashed #ccc; border-radius: 12px; background: #fff; transition: 0.3s; }
+.btn-action { background: var(--dark-green); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.btn-action:hover { background: var(--agro-green); }
