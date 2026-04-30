@@ -61,11 +61,20 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
 /* --- ТОВАРИ (index.html) --- */
 .section-title { color: #333; border-bottom: 2px solid var(--agro-green); padding-bottom: 10px; margin-top: 0; }
 
-/* Оновлена сітка товарів: автоматично підлаштовується під екран */
+/* --- ОСЬ ВАЖЛИВА ЗМІНА ДЛЯ СІТКИ 3х3 --- */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* Завжди робимо рівно 3 колонки */
     gap: 25px;
+    margin-bottom: 30px;
+}
+
+/* Якщо відкрити сайт на телефоні, зробимо 2 або 1 колонку */
+@media (max-width: 900px) {
+    .products-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+    .products-grid { grid-template-columns: 1fr; }
 }
 
 /* Картка товару */
@@ -139,6 +148,7 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
 .cabinet-wrapper { text-align: center; padding: 50px; border: 2px dashed #ccc; border-radius: 12px; background: #fff; transition: 0.3s; }
 .btn-action { background: var(--dark-green); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
 .btn-action:hover { background: var(--agro-green); }
+
 /* --- ВИПАДАЮЧЕ МЕНЮ (АКОРДЕОН) --- */
 .sidebar-dropdown summary {
     cursor: pointer;
@@ -147,7 +157,7 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     position: relative;
     font-weight: bold;
     color: var(--dark-green);
-    display: block; /* Важливо для правильного відображення */
+    display: block;
 }
 
 /* Ховаємо стандартний маркер у Safari/Chrome */
@@ -177,4 +187,68 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
 .sidebar-item.sub-item:hover {
     background: #f1f8ef;
     padding-left: 50px;
+}
+
+/* --- СТОРІНКА КОНКРЕТНОГО ТОВАРУ --- */
+.product-detail-wrapper {
+    display: flex;
+    gap: 30px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    margin-bottom: 30px;
+    align-items: flex-start;
+}
+
+/* Квадрат з фотографією (Жорстко фіксуємо розмір) */
+.product-detail-image-box {
+    flex: 0 0 300px;
+    max-width: 300px;
+    text-align: center;
+    background: #fdfdfd;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Сама картинка (Не даємо їй вирости більше ніж на 250px) */
+.product-detail-img {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.product-detail-no-image {
+    font-size: 80px;
+}
+
+.product-detail-info {
+    flex: 1;
+}
+
+.product-detail-category {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.product-detail-price {
+    font-size: 28px;
+    color: var(--dark-green, #2d5a27);
+    margin: 10px 0 20px 0;
+}
+
+.product-detail-desc {
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.btn-buy-large {
+    font-size: 18px;
+    padding: 15px 40px;
+    cursor: pointer;
 }

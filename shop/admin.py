@@ -1,16 +1,18 @@
 from django.contrib import admin
-from .models import Category, Product, Review
+from .models import Category, Product
 
+# Налаштування для Категорій
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    # Вимога: видно назву, створено о, оновлено о
-    list_display = ('name', 'created_at', 'updated_at')
+    # Залишаємо тільки ті поля, які реально є в моделі Category
+    list_display = ('id', 'name', 'parent')
+    list_display_links = ('id', 'name')
+    search_fields = ('name',)
 
+# Налаштування для Товарів (тут created_at і updated_at можна залишити, бо вони є в моделі Product)
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    # Додав ще категорію та ціну, щоб було зрозуміло, що це за товар
-    list_display = ('title', 'category', 'price', 'created_at', 'updated_at')
-
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('author', 'product', 'created_at', 'updated_at')
+    list_display = ('id', 'title', 'category', 'price', 'created_at')
+    list_display_links = ('id', 'title')
+    search_fields = ('title', 'description')
+    list_filter = ('category', 'price')
