@@ -43,17 +43,47 @@
         </nav>
     </div>
 
+    <!-- ГОЛОВНИЙ КОНТЕЙНЕР -->
     <div class="container">
-        <aside class="sidebar">
+
+        <!-- БОКОВЕ МЕНЮ -->
+        <div class="sidebar">
             <div class="sidebar-header">КАТАЛОГ ТОВАРІВ</div>
-            <a href="/" class="sidebar-item">📦 Всі товари</a>
-            {% for cat in categories %}
-                <a href="/category/{{ cat.id }}/" class="sidebar-item">🌿 {{ cat.name }}</a>
+
+            <a href="{% url 'main' %}" class="sidebar-item">📦 Всі товари</a>
+
+            <details class="sidebar-dropdown">
+                <summary class="sidebar-item dropdown-toggle">🌾 Насіння</summary>
+                <div class="sidebar-subcategories">
+                    {% for c in categories %}
+                        {% if c.name == 'Томати' or c.name == 'Кавуни' or c.name == 'Капуста' or c.name == 'капуста' %}
+                            <a href="{% url 'category_filter' c.id %}" class="sidebar-item sub-item">🌱 {{ c.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </details>
+
+            <!-- Динамічні інші розділи з бази -->
+            {% for c in categories %}
+                {% if c.name != 'Томати' and c.name != 'Кавуни' and c.name != 'Капуста' and c.name != 'капуста' %}
+                    <a href="{% url 'category_filter' c.id %}" class="sidebar-item">
+                        <!-- Я підправив смайлики, щоб вони точно ловили твої нові назви -->
+                        {% if 'Захист' in c.name or 'захист' in c.name %}🛡️
+                        {% elif 'Добрив' in c.name or 'добрив' in c.name %}🧪
+                        {% elif 'Агро' in c.name or 'агро' in c.name %}🧵
+                        {% else %}🔹{% endif %}
+                        {{ c.name }}
+                    </a>
+                {% endif %}
             {% endfor %}
-        </aside>
+        </div>
+        <!-- КІНЕЦЬ БОКОВОГО МЕНЮ -->
+
+        <!-- ОСНОВНИЙ КОНТЕНТ (ТОВАРИ) -->
         <main class="main-content">
             {% block content %}{% endblock %}
         </main>
+
     </div>
 
     <footer>
