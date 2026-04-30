@@ -1,30 +1,46 @@
 {% extends 'shop/base.html' %}
+
 {% block content %}
-    <h2 class="section-title">Товари сезону</h2>
+    <h2 class="section-title">
+        {% if current_category %}{{ current_category.name }}{% else %}Товари сезону{% endif %}
+    </h2>
+
     <div class="products-grid">
         {% for product in products %}
             <div class="product-card">
-                <div class="product-image-placeholder"><span>🌱</span></div>
+
+                <!-- ОСЬ ТУТ БРОНЕБІЙНІ СТИЛІ: Жорстко фіксуємо висоту 180px -->
+                <div class="product-image-container" style="width: 100%; height: 180px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fdfdfd; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
+                    {% if product.image %}
+                        <!-- А ТУТ КАЖЕМО КАРТИНЦІ: Не вилазь за межі контейнера! -->
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-img" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;">
+                    {% else %}
+                        <span class="no-image" style="font-size: 50px;">🌱</span>
+                    {% endif %}
+                </div>
+
                 <h3 class="product-title">{{ product.title }}</h3>
                 <p class="product-price">{{ product.price }} грн</p>
                 <p class="product-category">Категорія: {{ product.category.name }}</p>
-                <button class="btn-buy">КУПИТИ</button>
+                <button class="btn-buy" type="button">КУПИТИ</button>
             </div>
         {% empty %}
             <p class="empty-message">Товарів не знайдено.</p>
         {% endfor %}
     </div>
 
+    <!-- Пагінація -->
+    {% if products.has_other_pages %}
     <div class="pagination-wrapper">
         <div class="pagination-box">
             {% if products.has_previous %}
-                <a href="?page=1" class="p-link">« Перша</a>
                 <a href="?page={{ products.previous_page_number }}" class="p-link">Назад</a>
             {% endif %}
-            <span class="pagination-text">Сторінка {{ products.number }} з {{ products.paginator.num_pages }}</span>
+            <span class="pagination-text">Стор. {{ products.number }} з {{ products.paginator.num_pages }}</span>
             {% if products.has_next %}
                 <a href="?page={{ products.next_page_number }}" class="p-link">Вперед</a>
             {% endif %}
         </div>
     </div>
+    {% endif %}
 {% endblock %}
