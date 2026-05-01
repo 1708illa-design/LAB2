@@ -1,0 +1,34 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+    <h2 class="section-title">{{ product.title }}</h2>
+
+    <div class="product-detail-wrapper">
+
+        <!-- КВАДРАТ З ФОТОГРАФІЄЮ -->
+        <div class="product-detail-image-box">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-detail-img">
+            {% else %}
+                <span class="product-detail-no-image">🌱</span>
+            {% endif %}
+        </div>
+
+        <!-- ІНФОРМАЦІЯ ПРО ТОВАР -->
+        <div class="product-detail-info">
+            <p class="product-detail-category">Категорія: {{ product.category.name }}</p>
+            <h3 class="product-detail-price">{{ product.price }} грн</h3>
+
+            <!-- Динамічний опис з бази даних -->
+            <p class="product-detail-desc">
+                {% if product.description %}
+                    {{ product.description }}
+                {% else %}
+                    Опис для цього товару ще не додано.
+                {% endif %}
+            </p>
+
+            <button class="btn-buy btn-buy-large" type="button">КУПИТИ</button>
+        </div>
+    </div>
+{% endblock %}

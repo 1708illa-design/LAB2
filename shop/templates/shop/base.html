@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>AGRIS | Магазин насіння</title>
-    <!-- Змінили версію на v=3, щоб 100% підтягнулися стилі сітки -->
-    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}?v=3">
+    <!-- Змінив версію на v=4, щоб браузер точно підтягнув нові стилі -->
+    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}?v=4">
 </head>
 <body>
     <header class="header-top">
@@ -44,71 +44,72 @@
         </nav>
     </div>
 
-    <!-- ГОЛОВНИЙ КОНТЕЙНЕР -->
     <div class="container">
-
-        <!-- БОКОВЕ МЕНЮ (Тепер повністю розумне!) -->
+        <!-- БОКОВЕ МЕНЮ -->
         <div class="sidebar">
             <div class="sidebar-header">КАТАЛОГ ТОВАРІВ</div>
 
             <a href="{% url 'main' %}" class="sidebar-item">📦 Всі товари</a>
 
-            <!-- АВТОМАТИЧНА ГЕНЕРАЦІЯ МЕНЮ З БАЗИ -->
             {% for c in categories %}
-                <!-- Виводимо тільки ГОЛОВНІ категорії (ті, у яких немає батька) -->
                 {% if not c.parent %}
-
-                    <!-- Якщо у категорії Є підпункти (Насіння має Томати, Добриво має Мінеральні) -->
                     {% if c.subcategories.all %}
-
-                        <!-- open робить так, що список розгорнутий відразу -->
-                        <details class="sidebar-dropdown" open>
-
-                            <summary class="sidebar-item dropdown-toggle">
-                                <!-- Динамічні смайлики -->
-                                {% if 'насінн' in c.name|lower %}🌾
-                                {% elif 'добрив' in c.name|lower %}🧪
-                                {% else %}📁{% endif %}
-
-                                <!-- Назва-посилання (клік на "Насіння" покаже всі товари з підкатегорій) -->
-                                <a href="{% url 'category_filter' c.id %}" style="color: inherit; text-decoration: none;">
-                                    {{ c.name }}
-                                </a>
+                        <!-- Категорія з підпунктами -->
+                        <details class="sidebar-dropdown">
+                            <summary class="sidebar-item-summary">
+                                <div class="summary-content">
+                                    {{ c.icon }}
+                                    <a href="{% url 'category_filter' c.id %}" class="category-link">
+                                        {{ c.name }}
+                                    </a>
+                                </div>
+                                <span class="arrow-icon">▲</span>
                             </summary>
 
                             <div class="sidebar-subcategories">
-                                <!-- Виводимо всі підпункти цієї категорії -->
                                 {% for sub in c.subcategories.all %}
-                                    <a href="{% url 'category_filter' sub.id %}" class="sidebar-item sub-item">🌱 {{ sub.name }}</a>
+                                    <a href="{% url 'category_filter' sub.id %}" class="sidebar-item sub-item">
+                                        {{ sub.icon }} {{ sub.name }}
+                                    </a>
                                 {% endfor %}
                             </div>
                         </details>
-
-                    <!-- Якщо це звичайна категорія БЕЗ підпунктів (Агроволокно, Засоби захисту) -->
                     {% else %}
-                        <a href="{% url 'category_filter' c.id %}" class="sidebar-item">
-                            {% if 'захист' in c.name|lower %}🛡️
-                            {% elif 'добрив' in c.name|lower %}🧪
-                            {% elif 'агро' in c.name|lower %}🧵
-                            {% else %}🔹{% endif %}
-                            {{ c.name }}
+                        <!-- Одиночна категорія -->
+                        <a href="{% url 'category_filter' c.id %}" class="sidebar-item single-item">
+                            {{ c.icon }} {{ c.name }}
                         </a>
                     {% endif %}
-
                 {% endif %}
             {% endfor %}
         </div>
-        <!-- КІНЕЦЬ БОКОВОГО МЕНЮ -->
 
-        <!-- ОСНОВНИЙ КОНТЕНТ (ТОВАРИ) -->
         <main class="main-content">
             {% block content %}{% endblock %}
         </main>
-
     </div>
 
     <footer>
         <p>© 2026 Агромагазин AGRIS. Всі права захищені.</p>
     </footer>
+
+    <!-- Скрипт: Робить активну категорію зеленою і не дає закритися списку -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentUrl = window.location.href;
+            const links = document.querySelectorAll('.sidebar a');
+
+            links.forEach(link => {
+                if (link.href === currentUrl) {
+                    link.classList.add('active-link');
+                    // Якщо ми в підкатегорії, розкриваємо батьківський список
+                    const details = link.closest('details');
+                    if (details) {
+                        details.setAttribute('open', '');
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

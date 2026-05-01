@@ -61,15 +61,13 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
 /* --- ТОВАРИ (index.html) --- */
 .section-title { color: #333; border-bottom: 2px solid var(--agro-green); padding-bottom: 10px; margin-top: 0; }
 
-/* --- ОСЬ ВАЖЛИВА ЗМІНА ДЛЯ СІТКИ 3х3 --- */
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Завжди робимо рівно 3 колонки */
+    grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     margin-bottom: 30px;
 }
 
-/* Якщо відкрити сайт на телефоні, зробимо 2 або 1 колонку */
 @media (max-width: 900px) {
     .products-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -77,7 +75,6 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     .products-grid { grid-template-columns: 1fr; }
 }
 
-/* Картка товару */
 .product-card {
     border: 1px solid #eee;
     padding: 20px;
@@ -87,14 +84,13 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     background: #fff;
     transition: 0.3s;
     display: flex;
-    flex-direction: column; /* Для того, щоб кнопка завжди була внизу */
+    flex-direction: column;
 }
 .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
 
-/* КОНТЕЙНЕР ДЛЯ КАРТИНКИ (Жорсткі обмеження розміру) */
 .product-image-container {
     width: 100%;
-    height: 180px; /* Фіксована висота! Картинка не вилізе за неї */
+    height: 180px;
     background: #fdfdfd;
     display: flex;
     align-items: center;
@@ -102,25 +98,22 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     border-radius: 8px;
     margin-bottom: 15px;
     border: 1px dashed #ccc;
-    overflow: hidden; /* Обрізає все, що вилазить */
+    overflow: hidden;
 }
 
-/* САМА КАРТИНКА */
 .product-img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Масштабує фото так, щоб воно повністю влізло і не обрізалося */
+    object-fit: contain;
     display: block;
 }
 
-.no-image { font-size: 50px; } /* Емодзі, якщо фото немає */
+.no-image { font-size: 50px; }
 
-/* Тексти в картці */
 .product-title { font-size: 17px; color: var(--dark-green); height: 45px; overflow: hidden; margin-bottom: 10px; }
 .product-price { font-size: 20px; color: #e74c3c; font-weight: bold; margin-bottom: 5px; }
 .product-category { font-size: 12px; color: #777; margin-bottom: 15px; flex-grow: 1; }
 
-/* Кнопка */
 .btn-buy {
     background: var(--agro-green);
     color: white;
@@ -132,7 +125,7 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     font-weight: bold;
     font-size: 16px;
     transition: 0.3s;
-    margin-top: auto; /* Притискає кнопку до самого низу картки */
+    margin-top: auto;
 }
 .btn-buy:hover { background: var(--dark-green); }
 
@@ -149,46 +142,6 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
 .btn-action { background: var(--dark-green); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
 .btn-action:hover { background: var(--agro-green); }
 
-/* --- ВИПАДАЮЧЕ МЕНЮ (АКОРДЕОН) --- */
-.sidebar-dropdown summary {
-    cursor: pointer;
-    outline: none;
-    list-style: none;
-    position: relative;
-    font-weight: bold;
-    color: var(--dark-green);
-    display: block;
-}
-
-/* Ховаємо стандартний маркер у Safari/Chrome */
-.sidebar-dropdown summary::-webkit-details-marker { display: none; }
-
-/* Красива стрілочка справа */
-.sidebar-dropdown summary::after {
-    content: '▼';
-    position: absolute;
-    right: 20px;
-    font-size: 12px;
-    color: #888;
-    transition: transform 0.3s;
-}
-
-/* Стрілочка дивиться вгору, коли відкрито */
-.sidebar-dropdown[open] summary::after { transform: rotate(180deg); }
-
-/* Відступи для підкатегорій (насіння) */
-.sidebar-item.sub-item {
-    padding-left: 45px;
-    font-size: 14px;
-    background: #fafafa;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.sidebar-item.sub-item:hover {
-    background: #f1f8ef;
-    padding-left: 50px;
-}
-
 /* --- СТОРІНКА КОНКРЕТНОГО ТОВАРУ --- */
 .product-detail-wrapper {
     display: flex;
@@ -201,7 +154,6 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     align-items: flex-start;
 }
 
-/* Квадрат з фотографією (Жорстко фіксуємо розмір) */
 .product-detail-image-box {
     flex: 0 0 300px;
     max-width: 300px;
@@ -212,7 +164,6 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     padding: 20px;
 }
 
-/* Сама картинка (Не даємо їй вирости більше ніж на 250px) */
 .product-detail-img {
     max-width: 100%;
     max-height: 250px;
@@ -251,4 +202,108 @@ footer { background: #333; color: #ccc; text-align: center; padding: 40px 20px; 
     font-size: 18px;
     padding: 15px 40px;
     cursor: pointer;
+}
+
+/* --- СТИЛІ БОКОВОГО МЕНЮ (АКОРДЕОН) --- */
+
+/* ПОВНІСТЮ ВБИВАЄМО СТАНДАРТНИЙ ТРИКУТНИК БРАУЗЕРА */
+summary {
+    list-style: none !important;
+    list-style-type: none !important;
+}
+summary::-webkit-details-marker {
+    display: none !important;
+}
+summary::marker {
+    display: none !important;
+    content: "" !important;
+}
+summary:focus {
+    outline: none;
+}
+
+/* Обгортка для категорій з підменю */
+.sidebar-item-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    transition: background-color 0.2s;
+    font-weight: bold; /* Moved from previous messy rule */
+    color: var(--dark-green); /* Moved from previous messy rule */
+}
+
+.sidebar-item-summary:hover {
+    background-color: #f9f9f9;
+}
+
+/* Блок з іконкою та текстом */
+.summary-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    flex-grow: 1;
+}
+
+/* Саме посилання */
+.category-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.category-link:hover {
+    color: var(--agro-green); /* Changed to use variable */
+}
+
+/* Стрілочка */
+.arrow-icon {
+    padding-right: 15px;
+    color: #888;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+/* Переворот стрілочки, коли меню відкрите */
+.sidebar-dropdown[open] .arrow-icon {
+    transform: rotate(180deg);
+}
+
+/* Блок з підкатегоріями */
+.sidebar-subcategories {
+    background-color: #fcfcfc;
+    border-left: 3px solid #eee;
+    margin-left: 15px;
+}
+
+/* Підкатегорії */
+.sidebar-item.sub-item {
+    font-size: 14px;
+    padding: 10px 15px 10px 45px !important; /* Unified padding */
+    color: #555;
+    border-bottom: 1px solid #f0f0f0; /* Unified border color */
+    background: #fafafa; /* Unified background */
+}
+
+.sidebar-item.sub-item:hover {
+    background: #f1f8ef;
+    padding-left: 50px !important; /* Unified hover padding */
+}
+
+/* Одиночна категорія без підкатегорій */
+.single-item {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Активний стан (для JS скрипта) */
+.active-link {
+    color: var(--agro-green) !important;
+    font-weight: bold;
+    background-color: #e9f5ec;
 }
