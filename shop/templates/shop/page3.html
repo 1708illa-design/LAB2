@@ -1,12 +1,21 @@
 {% extends 'shop/base.html' %}
-
 {% block content %}
-    <h2 class="page-title">Зворотній зв'язок</h2>
+<div class="static-page-box">
+    <h1 class="page-title">Зворотній зв'язок</h1>
 
-    <div class="info-card">
-        <p><b>📍 Адреса:</b> м. Луцьк, вул. Соборності, 10</p>
-        <p><b>📞 Телефон:</b> +38 (099) 646-18-61</p>
-        <p><b>📧 Email:</b> info@agris.ua</p>
-        <p><b>⏰ Графік роботи:</b> Пн-Пт 09:00 - 18:00</p>
+    <div class="contact-grid">
+        <div class="contact-info">
+            <p><span class="c-icon">📍</span> <strong>Адреса:</strong> м. Луцьк, вул. Соборності, 14</p>
+            <p><span class="c-icon">📞</span> <strong>Телефон:</strong> +38 (099) 646-18-61</p>
+            <p><span class="c-icon">📧</span> <strong>Email:</strong> info@agris.ua</p>
+            <p><span class="c-icon">⏰</span> <strong>Графік роботи:</strong> Пн-Пт 09:00 - 18:00, Сб-Нд - Вихідні</p>
+        </div>
+
+        <div class="contact-map">
+            <div class="map-placeholder">
+                🗺️ Тут знаходиться магазин AGRIS
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}

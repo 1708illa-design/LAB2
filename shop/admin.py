@@ -1,39 +1,44 @@
-
 from django.contrib import admin
-from .models import Category, Product, Review  # <--- Додали Review сюди
-# Реєструємо КАТЕГОРІЇ (тільки один раз!)
+from .models import Category, Product, Review, Newsletter, Profile, Order, OrderItem
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ('price',)
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    # Додаємо icon, щоб було видно смайлики прямо у списку
-    list_display = ('id', 'icon', 'name', 'parent')
-    list_display_links = ('id', 'name')
+    list_display = ('id', 'final_icon', 'name', 'parent')
     search_fields = ('name',)
 
-    # Наше обмеження, щоб не створювати під-під-категорії
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "parent":
-            kwargs["queryset"] = Category.objects.filter(parent__isnull=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-# Реєструємо ТОВАРИ
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'category', 'price', 'created_at')
-    list_display_links = ('id', 'title')
-    search_fields = ('title', 'description')
-    list_filter = ('category', 'price')
-
+    search_fields = ('title',)
+    list_filter = ('category',)
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    # Які колонки показувати в списку відгуків
-    list_display = ('author', 'product', 'created_at')
+    list_display = ('author', 'product', 'rating', 'created_at')
+    list_filter = ('rating',)
 
-    # Фільтри збоку (дуже зручно шукати відгуки за датою або товаром)
-    list_filter = ('created_at', 'product')
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('email', 'subscribed_at')
+    search_fields = ('email',)
 
-    # Поле пошуку (можна шукати по імені автора або тексту відгуку)
-    search_fields = ('author', 'text')
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone', 'bonuses')
+    search_fields = ('user__username', 'phone')
 
-    # Тільки для читання (щоб випадково не змінити дату створення)
-    readonly_fields = ('created_at', 'updated_at')
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'total_price', 'status', 'created_at')
+    list_editable = ('status',)
+    list_filter = ('status', 'created_at')
+    inlines = [OrderItemInline]
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity', 'price')

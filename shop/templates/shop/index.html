@@ -8,44 +8,45 @@
     <div class="products-grid">
         {% for product in products %}
             <div class="product-card">
-
-                <!-- ОБГОРТАЄМО КАРТИНКУ В ПОСИЛАННЯ -->
-                <a href="{% url 'product_detail' product.id %}" style="display: block; text-decoration: none;">
-                    <!-- ОСЬ ТУТ БРОНЕБІЙНІ СТИЛІ: Жорстко фіксуємо висоту 180px -->
-                    <div class="product-image-container" style="width: 100%; height: 180px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fdfdfd; border-radius: 8px; margin-bottom: 15px; border: 1px solid #eee;">
+                <a href="{% url 'product_detail' product.id %}" class="product-link-wrapper">
+                    <div class="product-image-container">
                         {% if product.image %}
-                            <!-- А ТУТ КАЖЕМО КАРТИНЦІ: Не вилазь за межі контейнера! -->
-                            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-img" style="max-width: 100%; max-height: 100%; object-fit: contain; display: block;">
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-img">
                         {% else %}
-                            <span class="no-image" style="font-size: 50px;">🌱</span>
+                            <span class="no-image">🌱</span>
                         {% endif %}
                     </div>
                 </a>
 
-                <!-- ОБГОРТАЄМО НАЗВУ В ПОСИЛАННЯ -->
                 <h3 class="product-title">
-                    <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+                    <a href="{% url 'product_detail' product.id %}">
                         {{ product.title }}
                     </a>
                 </h3>
 
                 <p class="product-price">{{ product.price }} грн</p>
                 <p class="product-category">Категорія: {{ product.category.name }}</p>
-                <button class="btn-buy" type="button">КУПИТИ</button>
+
+                <form action="{% url 'cart_add' product.id %}" method="post" style="margin-top: auto;">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn-buy">🛒 КУПИТИ</button>
+                </form>
             </div>
         {% empty %}
             <p class="empty-message">Товарів не знайдено.</p>
         {% endfor %}
     </div>
 
-    <!-- Пагінація -->
     {% if products.has_other_pages %}
     <div class="pagination-wrapper">
         <div class="pagination-box">
             {% if products.has_previous %}
                 <a href="?page={{ products.previous_page_number }}" class="p-link">Назад</a>
             {% endif %}
-            <span class="pagination-text">Стор. {{ products.number }} з {{ products.paginator.num_pages }}</span>
+            <span class="pagination-current">
+                Стор. {{ products.number }} з {{ products.paginator.num_pages }}
+            </span>
             {% if products.has_next %}
                 <a href="?page={{ products.next_page_number }}" class="p-link">Вперед</a>
             {% endif %}

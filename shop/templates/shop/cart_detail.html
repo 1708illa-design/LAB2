@@ -1,0 +1,71 @@
+{% extends 'shop/base.html' %}
+ 
+{% block content %}
+<div class="cart-wrapper">
+    <h1 class="section-title">🛒 Кошик</h1>
+ 
+    {% if cart|length %}
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Фото</th>
+                    <th>Товар</th>
+                    <th>Ціна за шт.</th>
+                    <th>Кількість</th>
+                    <th>Сума</th>
+                    <th>Видалити</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr>
+                    <td>
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.title }}" class="cart-thumb">
+                        {% else %}
+                            <span class="no-image">🌱</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'product_detail' item.product.id %}">{{ item.product.title }}</a>
+                    </td>
+                    <td>{{ item.price }} грн</td>
+                    <td>
+                        <form action="{% url 'cart_add' item.product.id %}" method="post" class="update-qty-form">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input-small">
+                            <input type="hidden" name="override" value="True">
+                            <button type="submit" class="btn-update" title="Оновити кількість">🔄</button>
+                        </form>
+                    </td>
+                    <td><strong>{{ item.total_price }} грн</strong></td>
+                    <td>
+                        <form action="{% url 'cart_remove' item.product.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-remove">✕ Видалити</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="total-label">Разом до оплати:</td>
+                    <td colspan="2" class="total-price">{{ cart.get_total_price }} грн</td>
+                </tr>
+            </tfoot>
+        </table>
+ 
+        <div class="cart-actions">
+            <a href="{% url 'main' %}" class="btn-continue">← Продовжити покупки</a>
+            <button class="btn-buy" style="width: auto; padding: 15px 30px;">Оформити замовлення</button>
+        </div>
+ 
+    {% else %}
+        <div class="cart-empty">
+            <p>Ваш кошик порожній 🌾</p>
+            <a href="{% url 'main' %}" class="btn-buy" style="width: auto; padding: 15px 30px;">Перейти до товарів</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

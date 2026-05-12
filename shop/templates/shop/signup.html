@@ -1,0 +1,27 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <h1 class="section-title auth-title">Реєстрація</h1>
+
+    <form method="post" class="review-form">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="auth-form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="form-error-msg">{{ field.errors|striptags }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-buy btn-auth">Створити акаунт</button>
+    </form>
+
+    <p class="auth-links">
+        Вже є акаунт? <a href="{% url 'login' %}">Увійти</a>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'shop/base.html' %}
+{% block content %}
+
+<!-- ПРИВІТАННЯ + БОНУСИ -->
+<div class="cabinet-hero">
+    <div class="cabinet-hero-left">
+        <h1 class="cabinet-title">
+            {% if user.is_staff %}⚙️ Адмін-панель{% else %}👤 Мій кабінет{% endif %}
+        </h1>
+        <p class="cabinet-username">{{ user.first_name|default:user.username }}</p>
+    </div>
+
+    {% if not user.is_staff and user.profile %}
+    <div class="cabinet-bonus-card">
+        <div class="bonus-amount">🎁 {{ user.profile.bonuses }} грн</div>
+        <div class="bonus-label">бонусний рахунок</div>
+
+        <!-- VIP прогрес-бар -->
+        {% with total=user.profile.bonuses %}
+        <div class="vip-bar-wrapper">
+            <div class="vip-bar-track">
+                <div class="vip-bar-fill" style="width: {% if total >= 500 %}100{% else %}{{ total|floatformat:0 }}{% endif %}%"></div>
+            </div>
+            {% if total < 500 %}
+                <p class="vip-hint">💡 Ще {{ 500|add:"-"|add:total }} грн до знижки 10%!</p>
+            {% else %}
+                <p class="vip-hint vip-achieved">🏆 VIP статус активовано! Знижка 10%</p>
+            {% endif %}
+        </div>
+        {% endwith %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- ТАБЛИЦЯ ЗАМОВЛЕНЬ -->
+<div class="orders-wrapper">
+    <h2 class="section-title">
+        {% if user.is_staff %}Всі замовлення{% else %}Мої замовлення{% endif %}
+    </h2>
+
+    {% if orders %}
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Дата</th>
+                    {% if user.is_staff %}<th>Покупець</th>{% endif %}
+                    <th>Місто / Відділення</th>
+                    <th>Сума</th>
+                    <th>Статус</th>
+                    {% if user.is_staff %}<th>Змінити статус</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><strong>№{{ order.id }}</strong></td>
+                    <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+                    {% if user.is_staff %}
+                        <td>{{ order.user.username }}</td>
+                    {% endif %}
+                    <td>
+                        <span class="order-city">📍 {{ order.city }}</span><br>
+                        <small>{{ order.warehouse }}</small>
+                    </td>
+                    <td class="total-price">{{ order.total_price }} грн</td>
+                    <td>
+                        <span class="status-badge status-{{ order.status }}">
+                            {% if order.status == 'new' %}🆕 Нове
+                            {% elif order.status == 'sent' %}🚚 Відправлено
+                            {% elif order.status == 'done' %}✅ Виконано
+                            {% endif %}
+                        </span>
+                    </td>
+
+                    <!-- АДМІН: зміна статусу одним кліком -->
+                    {% if user.is_staff %}
+                    <td>
+                        <form method="post" action="{% url 'order_change_status' order.id %}" class="status-change-form">
+                            {% csrf_token %}
+                            <select name="status" class="status-select" onchange="this.form.submit()">
+                                <option value="new"  {% if order.status == 'new'  %}selected{% endif %}>🆕 Нове</option>
+                                <option value="sent" {% if order.status == 'sent' %}selected{% endif %}>🚚 Відправлено</option>
+                                <option value="done" {% if order.status == 'done' %}selected{% endif %}>✅ Виконано</option>
+                            </select>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+
+                <!-- Деталі товарів замовлення -->
+                <tr class="order-items-row">
+                    <td colspan="{% if user.is_staff %}7{% else %}5{% endif %}" class="order-items-cell">
+                        {% for item in order.items.all %}
+                            <span class="order-item-tag">
+                                {{ item.product.title }} × {{ item.quantity }} = {{ item.get_total_price }} грн
+                            </span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="cart-empty">
+            <p>Замовлень поки немає 🌾</p>
+            <a href="{% url 'main' %}" class="btn-buy" style="display:inline-block; width:auto; padding: 12px 30px;">До товарів</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
