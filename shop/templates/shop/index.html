@@ -1,54 +1,72 @@
 {% extends 'shop/base.html' %}
 
+{% block title %}Головна |{% endblock %}
+
 {% block content %}
-    <h2 class="section-title">
+    <h2 class="section-title" style="margin-top: 0; color: #333; font-size: 22px; margin-bottom: 25px; font-weight: 700;">
         {% if current_category %}{{ current_category.name }}{% else %}Товари сезону{% endif %}
     </h2>
 
-    <div class="products-grid">
+    <div class="products-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
         {% for product in products %}
-            <div class="product-card">
-                <a href="{% url 'product_detail' product.id %}" class="product-link-wrapper">
-                    <div class="product-image-container">
+            <div class="product-card" style="background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; border: 1px solid #f2f2f2;">
+
+                <!-- Контейнер для фото -->
+                <a href="{% url 'product_detail' product.id %}" style="text-decoration: none;">
+                    <div style="height: 190px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; border-radius: 8px; overflow: hidden; margin-bottom: 15px;">
                         {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-img">
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         {% else %}
-                            <span class="no-image">🌱</span>
+                            <span style="font-size: 40px;">🌱</span>
                         {% endif %}
                     </div>
                 </a>
 
-                <h3 class="product-title">
-                    <a href="{% url 'product_detail' product.id %}">
+                <!-- Назва товару (збільшив відступ знизу, оскільки категорії немає) -->
+                <h3 style="margin: 0 0 15px 0; font-size: 16px; line-height: 1.4; height: 45px; overflow: hidden; text-align: center;">
+                    <a href="{% url 'product_detail' product.id %}" style="color: #2c3e50; text-decoration: none; font-weight: 700;">
                         {{ product.title }}
                     </a>
                 </h3>
 
-                <p class="product-price">{{ product.price }} грн</p>
-                <p class="product-category">Категорія: {{ product.category.name }}</p>
+                <!-- Нижня частина: Ціна + Кнопка -->
+                <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                    <p style="margin: 0; font-size: 20px; font-weight: 800; color: #e74c3c;">
+                        {{ product.price }} <span style="font-size: 14px; font-weight: 600;">грн</span>
+                    </p>
 
-                <form action="{% url 'cart_add' product.id %}" method="post" style="margin-top: auto;">
-                    {% csrf_token %}
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="btn-buy">🛒 КУПИТИ</button>
-                </form>
+                    <form action="{% url 'cart_add' product.id %}" method="post" style="margin: 0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn-buy" style="background: #2ecc71; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: 0.2s;"
+                                onmouseover="this.style.background='#27ae60'"
+                                onmouseout="this.style.background='#2ecc71'">
+                            <span style="font-size: 16px;">🛒</span> КУПИТИ
+                        </button>
+                    </form>
+                </div>
             </div>
         {% empty %}
-            <p class="empty-message">Товарів не знайдено.</p>
+            <div style="text-align: center; width: 100%; padding: 50px;">
+                <p style="color: #999; font-size: 18px;">Наразі товарів немає 🌾</p>
+            </div>
         {% endfor %}
     </div>
 
+    <!-- Пагінація -->
     {% if products.has_other_pages %}
-    <div class="pagination-wrapper">
-        <div class="pagination-box">
+    <div style="margin-top: 40px; display: flex; justify-content: center;">
+        <div style="display: flex; gap: 10px; align-items: center; background: #fff; padding: 10px; border-radius: 50px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
             {% if products.has_previous %}
-                <a href="?page={{ products.previous_page_number }}" class="p-link">Назад</a>
+                <a href="?page={{ products.previous_page_number }}" style="text-decoration: none; color: #2ecc71; font-weight: bold; padding: 5px 15px;">« Назад</a>
             {% endif %}
-            <span class="pagination-current">
+
+            <span style="font-weight: bold; color: #333; background: #f9f9f9; padding: 5px 15px; border-radius: 20px;">
                 Стор. {{ products.number }} з {{ products.paginator.num_pages }}
             </span>
+
             {% if products.has_next %}
-                <a href="?page={{ products.next_page_number }}" class="p-link">Вперед</a>
+                <a href="?page={{ products.next_page_number }}" style="text-decoration: none; color: #2ecc71; font-weight: bold; padding: 5px 15px;">Вперед »</a>
             {% endif %}
         </div>
     </div>

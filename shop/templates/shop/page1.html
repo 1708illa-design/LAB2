@@ -1,22 +1,65 @@
 {% extends 'shop/base.html' %}
-
 {% block content %}
-<div class="static-page-wrapper">
-    <h1 class="section-title">Як замовити товар? 🌱</h1>
 
-    <div class="static-content">
-        <h3>Крок 1: Вибір насіння</h3>
-        <p>Перейдіть до нашого каталогу зліва та оберіть потрібну категорію. Натисніть кнопку "Купити" біля товару, який вам сподобався.</p>
+<div style="background: white; padding: 40px 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+    <h1 style="color: #2c3e50; margin-top: 0; margin-bottom: 30px; font-size: 28px; border-bottom: 3px solid #27ae60; padding-bottom: 15px; font-weight: 800;">
+        Як замовити товар? 🌱
+    </h1>
 
-        <h3>Крок 2: Оформлення в кошику</h3>
-        <p>Перейдіть до кошика (іконка зверху праворуч). Перевірте кількість товарів та натисніть "Оформити замовлення".</p>
+    <p style="font-size: 16px; color: #555; margin-bottom: 30px; line-height: 1.6;">
+        Ми зробили процес покупки в <strong>AGRIS</strong> максимально простим та зручним. Всього 3 кроки відокремлюють вас від отримання якісного насіння та товарів для саду!
+    </p>
 
-        <h3>Крок 3: Доставка</h3>
-        <p>Ми співпрацюємо з Новою Поштою. Введіть ваше місто та оберіть зручне відділення зі списку.</p>
+    <!-- ПОКРОКОВА ІНСТРУКЦІЯ (ТЕПЕР ЦЕ КЛІКАБЕЛЬНІ КАРТКИ) -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px;">
 
-        <div class="info-box">
-            <strong>💡 Бонусна система:</strong> Зареєструйтесь на сайті, і ми будемо повертати 5% від суми кожної покупки на ваш бонусний рахунок!
-        </div>
+        <!-- Крок 1 (Веде на Головну/Каталог) -->
+        <a href="{% url 'main' %}" style="display: block; text-decoration: none; color: inherit; cursor: pointer; background: #fdfdfd; border: 1px solid #eee; padding: 25px; border-radius: 10px; position: relative; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.05)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <div style="position: absolute; top: -15px; left: 20px; background: #27ae60; color: white; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; font-size: 18px; box-shadow: 0 4px 6px rgba(39, 174, 96, 0.3);">1</div>
+            <div style="font-size: 40px; text-align: center; margin-bottom: 15px;">🛒</div>
+            <h3 style="color: #2c3e50; text-align: center; margin-bottom: 10px; font-size: 18px;">Вибір товару</h3>
+            <p style="color: #7f8c8d; font-size: 14px; text-align: center; line-height: 1.5; margin: 0;">
+                Перейдіть до каталогу зліва, оберіть потрібну категорію та натисніть кнопку "Купити" біля товару, який вам сподобався.
+            </p>
+        </a>
+
+        <!-- Крок 2 (Веде в Кошик) -->
+        <a href="{% url 'cart_detail' %}" style="display: block; text-decoration: none; color: inherit; cursor: pointer; background: #fdfdfd; border: 1px solid #eee; padding: 25px; border-radius: 10px; position: relative; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.05)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <div style="position: absolute; top: -15px; left: 20px; background: #3498db; color: white; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; font-size: 18px; box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);">2</div>
+            <div style="font-size: 40px; text-align: center; margin-bottom: 15px;">📝</div>
+            <h3 style="color: #2c3e50; text-align: center; margin-bottom: 10px; font-size: 18px;">Оформлення</h3>
+            <p style="color: #7f8c8d; font-size: 14px; text-align: center; line-height: 1.5; margin: 0;">
+                Перейдіть до кошика (іконка зверху праворуч), перевірте кількість товарів та заповніть просту форму доставки.
+            </p>
+        </a>
+
+        <!-- Крок 3 (Веде на сторінку Оплати та Доставки) -->
+        <a href="{% url 'page_two' %}" style="display: block; text-decoration: none; color: inherit; cursor: pointer; background: #fdfdfd; border: 1px solid #eee; padding: 25px; border-radius: 10px; position: relative; transition: 0.3s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.05)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+            <div style="position: absolute; top: -15px; left: 20px; background: #e67e22; color: white; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; font-size: 18px; box-shadow: 0 4px 6px rgba(230, 126, 34, 0.3);">3</div>
+            <div style="font-size: 40px; text-align: center; margin-bottom: 15px;">📦</div>
+            <h3 style="color: #2c3e50; text-align: center; margin-bottom: 10px; font-size: 18px;">Отримання</h3>
+            <p style="color: #7f8c8d; font-size: 14px; text-align: center; line-height: 1.5; margin: 0;">
+                Отримайте посилку у відділенні Нової Пошти або заберіть самовивозом у нашому магазині в Луцьку.
+            </p>
+        </a>
     </div>
+
+    <!-- БАНЕР БОНУСНОЇ СИСТЕМИ -->
+    <div style="background: linear-gradient(135deg, #fceabb, #f8b500); padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(248, 181, 0, 0.2); display: flex; align-items: center; gap: 25px; flex-wrap: wrap;">
+        <div style="font-size: 60px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));">🎁</div>
+        <div style="flex: 1;">
+            <h2 style="margin: 0 0 10px 0; color: #8e44ad; font-size: 22px; font-weight: 900;">Секретна зброя: Бонусна система!</h2>
+            <p style="margin: 0; color: #5a2a70; font-size: 15px; line-height: 1.5;">
+                Зареєструйтесь на сайті прямо зараз! За кожну успішну покупку ми будемо нараховувати вам кешбек на бонусний рахунок. Використовуйте ці бонуси для оплати наступних замовлень, а при накопиченні певної суми — отримайте <b>VIP статус зі знижкою 10% назавжди!</b>
+            </p>
+        </div>
+        {% if not user.is_authenticated %}
+        <div>
+            <a href="{% url 'signup' %}" style="display: inline-block; background: #8e44ad; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; box-shadow: 0 4px 10px rgba(142, 68, 173, 0.4); transition: 0.2s;" onmouseover="this.style.background='#732d91'" onmouseout="this.style.background='#8e44ad'">Зареєструватися</a>
+        </div>
+        {% endif %}
+    </div>
+
 </div>
+
 {% endblock %}

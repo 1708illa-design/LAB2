@@ -3,144 +3,235 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>AGRIS | Магазин насіння</title>
-    <!-- Змінено v=16 для автоматичного скидання кешу -->
-    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}?v=16">
-</head>
-<body>
-    <header class="header-top">
-        <a href="{% url 'main' %}" class="header-logo-link">
-            <span class="logo-emoji">🌱</span>
-            <div class="logo-text-block">
-                <span class="logo-title">AGRIS</span>
-                <span class="logo-subtitle">Магазин насіння</span>
-            </div>
-        </a>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} AGRIS | Магазин насіння</title>
 
-        <div class="header-contacts-wrapper">
-            <div class="header-info-block">
-                <span class="info-icon">📞</span>
-                <div class="info-text">
-                    <strong>Дзвоніть з 09:00 до 18:00</strong>
-                    0 (99) 646-18-61
-                </div>
-            </div>
-            <div class="header-info-block">
-                <span class="info-icon">📍</span>
-                <div class="info-text">
-                    <strong>Магазин «Agris»</strong>
-                    м. Луцьк, вул. Соборності, 14
-                </div>
-            </div>
+    <link rel="stylesheet" href="{% static 'shop/css/style.css' %}?v=160">
 
-            {% if user.is_authenticated %}
-                <div class="header-user-block">
-                    <span class="user-greeting">👤 {{ user.first_name|default:user.username }}</span>
-                    {% if user.profile %}
-                        <span class="user-bonus-badge">🎁 {{ user.profile.bonuses }} грн</span>
-                    {% endif %}
-                </div>
-            {% endif %}
-
-            <a href="{% url 'cart_detail' %}" class="cart-icon-link">
-                🛒 <span class="cart-count">{{ request.session.cart|length }}</span>
-            </a>
-        </div>
-    </header>
-
-    <div class="header-bottom">
-        <nav class="main-nav">
-            {% url 'main' as url_main %}
-            {% url 'page_1' as url_page_1 %}
-            {% url 'page_2' as url_page_2 %}
-            {% url 'contacts' as url_contacts %}
-
-            <a href="{{ url_main }}" class="{% if request.path == url_main and not current_category %}active-link{% endif %}">Головна</a>
-            <a href="{{ url_page_1 }}" class="{% if request.path == url_page_1 %}active-link{% endif %}">Як замовити</a>
-            <a href="{{ url_page_2 }}" class="{% if request.path == url_page_2 %}active-link{% endif %}">Оплата та доставка</a>
-            <a href="{{ url_contacts }}" class="{% if request.path == url_contacts %}active-link{% endif %}">Контакти</a>
-
-            {% if user.is_authenticated %}
-                <a href="{% url 'cabinet' %}" class="{% if request.path == '/cabinet/' %}active-link{% endif %}">Мій кабінет</a>
-                <a href="{% url 'logout' %}" class="nav-logout-link">Вийти</a>
+    <style>
+        /* Стилі для динамічного фону авторизації */
+        .auth-page-bg {
+            background-color: #e8f5e9;
+            {% if site_config and site_config.auth_background %}
+                background-image: url("{{ site_config.auth_background.url }}");
             {% else %}
-                <a href="{% url 'login' %}">Увійти</a>
-                <a href="{% url 'signup' %}" class="nav-signup-link">Реєстрація</a>
+                background-image: url("{% static 'shop/images/wheat_bg.jpg' %}");
             {% endif %}
-        </nav>
-    </div>
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    {% if messages %}
-    <div class="messages-container">
-        {% for message in messages %}
-            <div class="message message-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
+        /* Фікс "задньої платформи" для сторінок авторизації */
+        .auth-clean-layout {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            flex: 1 !important;
+            width: 100% !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
 
-    <div class="container">
-        <div class="sidebar">
-            <div class="sidebar-header">КАТАЛОГ ТОВАРІВ</div>
-            <a href="{% url 'main' %}" class="sidebar-item single-item {% if request.path == '/' and not current_category %}active-link{% endif %}">
-                📦 Всі товари
+        /* Примусова прозорість фонів на сторінках входу */
+        .auth-page-bg .container,
+        .auth-page-bg main {
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            max-width: none !important;
+            padding: 0 !important;
+        }
+
+        /* Сама картка входу (біла) */
+        .auth-card {
+            background: white !important;
+            border-radius: 20px !important;
+            padding: 45px !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+            width: 100%;
+            max-width: 450px !important;
+        }
+
+        /* === ФІКС "ОБРІЗАНОГО" МЕНЮ (відступи справа) === */
+        .sidebar-item-summary {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 12px 20px 12px 15px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            cursor: pointer;
+        }
+
+        .sidebar-item.single-item {
+            padding: 12px 20px 12px 15px !important;
+            box-sizing: border-box !important;
+            display: block;
+            width: 100% !important;
+        }
+
+        .arrow {
+            font-size: 11px !important;
+            color: #999 !important;
+            transition: transform 0.3s ease !important;
+        }
+
+        .header-info-block .info-text strong { color: white; }
+        .header-info-block .info-text { color: white; font-size: 14px; }
+        details[open] .arrow { transform: rotate(180deg); }
+    </style>
+</head>
+
+{% with url_name=request.resolver_match.url_name %}
+{% with auth_list="login,signup,password_reset,password_reset_done,password_reset_confirm,password_reset_complete" %}
+
+<body class="{% if url_name in auth_list %}auth-page-bg{% endif %}">
+
+    {# --- ШАПКА --- #}
+    {% if url_name not in auth_list %}
+        <header class="header-top">
+            <a href="{% url 'main' %}" class="header-logo-link">
+                <span class="logo-emoji">🌱</span>
+                <div class="logo-text-block">
+                    <span class="logo-title">AGRIS</span>
+                    <span class="logo-subtitle">Магазин насіння</span>
+                </div>
             </a>
-            {% for c in categories %}
-                {% if not c.parent %}
-                    {% if c.subcategories.all %}
-                        <details class="sidebar-dropdown" {% if current_category == c or current_category.parent == c %}open{% endif %}>
-                            <summary class="sidebar-item-summary">
-                                <div class="summary-content">
-                                    {{ c.final_icon }}
-                                    <a href="{% url 'category_filter' c.id %}" class="category-link {% if current_category == c %}active-link{% endif %}">
-                                        {{ c.name }}
-                                    </a>
-                                </div>
-                                <span class="arrow-icon"></span>
-                            </summary>
-                            <div class="sidebar-subcategories">
-                                {% for sub in c.subcategories.all %}
-                                    <a href="{% url 'category_filter' sub.id %}" class="sidebar-item sub-item {% if current_category == sub %}active-link{% endif %}">
-                                        {{ sub.final_icon }} {{ sub.name }}
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </details>
-                    {% else %}
-                        <a href="{% url 'category_filter' c.id %}" class="sidebar-item single-item {% if current_category == c %}active-link{% endif %}">
-                            {{ c.final_icon }} {{ c.name }}
-                        </a>
-                    {% endif %}
+
+            <div class="header-contacts-wrapper">
+                <div class="header-info-block">
+                    <span class="info-icon">📞</span>
+                    <div class="info-text">
+                        <strong>Дзвоніть з 09:00 до 18:00</strong>
+                        0 (99) 646-18-61
+                    </div>
+                </div>
+                <div class="header-info-block">
+                    <span class="info-icon">📍</span>
+                    <div class="info-text">
+                        <strong>Магазин «Agris»</strong>
+                        м. Луцьк, вул. Соборності, 14
+                    </div>
+                </div>
+                <a href="{% url 'cart_detail' %}" class="cart-icon-link">
+                    🛒 <span class="cart-count">{{ request.session.cart|length|default:"0" }}</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="header-bottom">
+            <nav class="main-nav">
+                <a href="{% url 'main' %}">ГОЛОВНА</a>
+                <a href="{% url 'page_1' %}">ЯК ЗАМОВИТИ</a>
+                <a href="{% url 'page_two' %}">ОПЛАТА ТА ДОСТАВКА</a>
+                <a href="{% url 'contacts' %}">КОНТАКТИ</a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'cabinet' %}">
+                        <span style="margin-right: 5px;">👤</span> МІЙ КАБІНЕТ
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}">УВІЙТИ</a>
+                    <a href="{% url 'signup' %}" class="nav-signup-link">РЕЄСТРАЦІЯ</a>
                 {% endif %}
+            </nav>
+        </div>
+
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="message message-{{ message.tags }}">{{ message }}</div>
             {% endfor %}
         </div>
+        {% endif %}
+    {% endif %}
 
-        <main class="main-content">
+    {# --- КОНТЕНТ --- #}
+    <div class="{% if url_name in auth_list %}auth-clean-layout{% else %}container{% endif %}">
+
+        {% if url_name not in auth_list and url_name in 'main,category_filter,page_1,page_two,contacts' %}
+            <aside class="sidebar">
+                <div class="sidebar-header">КАТАЛОГ ТОВАРІВ</div>
+                <div style="padding: 10px 0;">
+                    <a href="{% url 'main' %}" class="sidebar-item single-item">📦 Всі товари</a>
+
+                    {% for cat in categories %}
+                        {% if not cat.parent %}
+                            {% if cat.subcategories.all %}
+                                <details class="sidebar-item-wrapper" {% if cat.id|stringformat:"i" in request.path %}open{% endif %}>
+                                    <summary class="sidebar-item-summary">
+                                        <div class="summary-content">
+                                            <span>{{ cat.final_icon }}</span>
+                                            <a href="{% url 'category_filter' cat.id %}" class="category-link">{{ cat.name }}</a>
+                                        </div>
+                                        <span class="arrow">▼</span>
+                                    </summary>
+                                    <div class="sidebar-subcategories">
+                                        {% for sub in cat.subcategories.all %}
+                                            <a href="{% url 'category_filter' sub.id %}" class="sidebar-item sub-item">
+                                                <span style="margin-right: 8px;">{{ sub.final_icon }}</span> {{ sub.name }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </details>
+                            {% else %}
+                                <a href="{% url 'category_filter' cat.id %}" class="sidebar-item single-item">
+                                    <span style="margin-right: 10px;">{{ cat.final_icon }}</span> {{ cat.name }}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </aside>
+        {% endif %}
+
+        <main class="{% if url_name in auth_list %}auth-card{% else %}main-content{% endif %}">
             {% block content %}{% endblock %}
         </main>
     </div>
 
-    <!-- ФУТЕР (Розділений на 2 поверхи) -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-
-            <!-- Верхній поверх (Розсилка справа) -->
-            <div class="footer-top">
-                <div class="newsletter-block">
-                    <p class="newsletter-title">📧 Підпишись на розсилку акцій</p>
-                    <form action="{% url 'subscribe_newsletter' %}" method="post" class="newsletter-form">
-                        {% csrf_token %}
-                        {{ newsletter_form.email }}
-                        <button type="submit" class="newsletter-btn">Підписатись</button>
-                    </form>
+    {% if url_name not in auth_list %}
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-top">
+                    <div class="newsletter-block">
+                        <h3 class="newsletter-title">Підпишіться на наші новини та акції:</h3>
+                        <form action="{% url 'subscribe_newsletter' %}" method="post" class="newsletter-form">
+                            {% csrf_token %} <!-- ВИПРАВЛЕНО: Додано токен захисту -->
+                            <input type="email" name="email" class="newsletter-input" placeholder="Ваш Email" required>
+                            <button type="submit" class="newsletter-btn">Підписатися</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p class="footer-copy">© 2026 Агромагазин AGRIS. 🌱 Всі права захищено.</p>
                 </div>
             </div>
+        </footer>
+    {% endif %}
 
-            <!-- Нижній поверх (Копірайт по центру самого низу) -->
-            <div class="footer-bottom">
-                <p class="footer-copy">© 2026 Агромагазин AGRIS. Всі права захищені.</p>
-            </div>
+{% endwith %}
+{% endwith %}
 
-        </div>
-    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(function(msg) {
+                setTimeout(function() {
+                    msg.classList.add('fade-out');
+                    setTimeout(function() {
+                        msg.remove();
+                    }, 500);
+                }, 3000);
+            });
+        });
+    </script>
 </body>
 </html>

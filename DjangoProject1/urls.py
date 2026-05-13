@@ -8,6 +8,6 @@ urlpatterns = [
     path('', include('shop.urls')),
 ]
 
-# Це підключення дозволяє бачити фото у браузері під час розробки
+# Підключення медіа-файлів (фото товарів)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

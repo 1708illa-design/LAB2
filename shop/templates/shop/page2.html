@@ -1,26 +1,85 @@
 {% extends 'shop/base.html' %}
 {% block content %}
-<div class="static-page-box">
-    <h1 class="page-title">Оплата та доставка</h1>
 
-    <div class="info-grid">
-        <div class="info-card delivery-card">
-            <h3>🚚 Доставка</h3>
-            <ul>
-                <li><strong>Нова Пошта:</strong> доставка у відділення або кур'єром (1-3 дні). Вартість від 70 грн.</li>
-                <li><strong>Укрпошта:</strong> стандартна доставка (3-5 днів). Вартість від 40 грн.</li>
-                <li><strong>Самовивіз:</strong> безкоштовно з нашого магазину в м. Луцьк.</li>
-            </ul>
+<div style="background: white; padding: 40px 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+    <h1 style="color: #2c3e50; margin-top: 0; margin-bottom: 30px; font-size: 28px; border-bottom: 3px solid #3498db; padding-bottom: 15px; font-weight: 800;">
+        Оплата та доставка 🚚💳
+    </h1>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+
+        <!-- КОЛОНКА ДОСТАВКА -->
+        <div>
+            <h2 style="color: #2980b9; font-size: 20px; display: flex; align-items: center; gap: 10px; margin-top: 0;">
+                <span style="font-size: 24px;">📦</span> Способи доставки
+            </h2>
+
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                <!-- Нова Пошта -->
+                <div style="border: 1px solid #eee; border-left: 4px solid #e74c3c; padding: 15px 20px; border-radius: 8px; background: #fdfdfd;">
+                    <h3 style="margin: 0 0 5px 0; color: #2c3e50; font-size: 16px;">Нова Пошта</h3>
+                    <p style="margin: 0 0 8px 0; color: #7f8c8d; font-size: 14px;">Доставка у відділення, поштомат або кур'єром за вашою адресою.</p>
+                    <div style="display: flex; gap: 15px; font-size: 13px; font-weight: bold;">
+                        <span style="color: #27ae60;">⏱ 1-3 дні</span>
+                        <span style="color: #c0392b;">💰 від 70 грн</span>
+                    </div>
+                </div>
+
+                <!-- Укрпошта -->
+                <div style="border: 1px solid #eee; border-left: 4px solid #f1c40f; padding: 15px 20px; border-radius: 8px; background: #fdfdfd;">
+                    <h3 style="margin: 0 0 5px 0; color: #2c3e50; font-size: 16px;">Укрпошта</h3>
+                    <p style="margin: 0 0 8px 0; color: #7f8c8d; font-size: 14px;">Стандартна доставка у будь-який куточок України.</p>
+                    <div style="display: flex; gap: 15px; font-size: 13px; font-weight: bold;">
+                        <span style="color: #27ae60;">⏱ 3-5 днів</span>
+                        <span style="color: #c0392b;">💰 від 40 грн</span>
+                    </div>
+                </div>
+
+                <!-- Самовивіз -->
+                <div style="border: 1px solid #eee; border-left: 4px solid #27ae60; padding: 15px 20px; border-radius: 8px; background: #fdfdfd;">
+                    <h3 style="margin: 0 0 5px 0; color: #2c3e50; font-size: 16px;">Самовивіз із магазину</h3>
+                    <p style="margin: 0 0 8px 0; color: #7f8c8d; font-size: 14px;">Заберіть замовлення особисто з нашого магазину в м. Луцьк.</p>
+                    <div style="display: flex; gap: 15px; font-size: 13px; font-weight: bold;">
+                        <span style="color: #27ae60;">✅ Безкоштовно</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="info-card payment-card">
-            <h3>💳 Оплата</h3>
-            <ul>
-                <li><strong>При отриманні (Накладений платіж):</strong> ви оплачуєте товар у відділенні пошти після його огляду. Найбезпечніший варіант!</li>
-                <li><strong>Переказ на карту:</strong> реквізити (ПриватБанк / Monobank) надаються менеджером після підтвердження.</li>
-                <li><strong>Готівкою:</strong> при самовивозі з магазину.</li>
-            </ul>
+        <!-- КОЛОНКА ОПЛАТА -->
+        <div>
+            <h2 style="color: #2980b9; font-size: 20px; display: flex; align-items: center; gap: 10px; margin-top: 0;">
+                <span style="font-size: 24px;">💳</span> Способи оплати
+            </h2>
+
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                <!-- Накладений платіж -->
+                <div style="background: #f8f9fa; padding: 15px 20px; border-radius: 8px;">
+                    <h3 style="margin: 0 0 5px 0; color: #2c3e50; font-size: 16px; display: flex; align-items: center; gap: 8px;">💵 При отриманні (Накладений платіж)</h3>
+                    <p style="margin: 0; color: #555; font-size: 14px; line-height: 1.5;">
+                        Ви оплачуєте товар безпосередньо у відділенні пошти <b>після його огляду</b>. Це найбезпечніший варіант, проте пошта стягує комісію за переказ коштів (20 грн + 2% від суми).
+                    </p>
+                </div>
+
+                <!-- Переказ на карту -->
+                <div style="background: #f8f9fa; padding: 15px 20px; border-radius: 8px;">
+                    <h3 style="margin: 0 0 5px 0; color: #2c3e50; font-size: 16px; display: flex; align-items: center; gap: 8px;">🏦 Переказ на карту (ПриватБанк / Monobank)</h3>
+                    <p style="margin: 0; color: #555; font-size: 14px; line-height: 1.5;">
+                        Оплата безпосередньо на банківську карту або рахунок ФОП. Реквізити будуть надані менеджером після підтвердження наявності товару. Дозволяє зекономити на комісії пошти!
+                    </p>
+                </div>
+
+                <!-- Бонуси -->
+                <div style="background: #fffbe6; border: 1px solid #ffe58f; padding: 15px 20px; border-radius: 8px;">
+                    <h3 style="margin: 0 0 5px 0; color: #d35400; font-size: 16px; display: flex; align-items: center; gap: 8px;">🎁 Оплата бонусами</h3>
+                    <p style="margin: 0; color: #555; font-size: 14px; line-height: 1.5;">
+                        Якщо ви зареєстрований користувач, ви можете частково або повністю оплатити замовлення накопиченими бонусами в особистому кабінеті при оформленні.
+                    </p>
+                </div>
+            </div>
         </div>
+
     </div>
 </div>
+
 {% endblock %}

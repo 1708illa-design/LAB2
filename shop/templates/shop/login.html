@@ -1,27 +1,48 @@
 {% extends 'shop/base.html' %}
 
+{% block title %}Вхід{% endblock %}
+
 {% block content %}
 <div class="auth-wrapper">
-    <h1 class="section-title auth-title">Вхід в кабінет</h1>
+    <div class="auth-card">
+        <!-- Іконка для візуальної відповідності стилю -->
+        <div class="auth-icon">👤</div>
 
-    <form method="post" class="review-form">
-        {% csrf_token %}
+        <h1 class="auth-title">Вхід в кабінет</h1>
+        <p class="auth-subtitle">Раді бачити вас знову!</p>
 
-        <div class="auth-form-group">
-            <label>Логін</label>
-            <input type="text" name="username" class="form-input" required>
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+
+            <!-- Виведення загальних помилок (напр. "Неправильний логін або пароль") -->
+            {% if form.non_field_errors %}
+                <div class="message message-error" style="background: #fdf2f2; border: 1px solid #f8d7da; color: #721c24; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-size: 14px;">
+                    {{ form.non_field_errors|join:", " }}
+                </div>
+            {% endif %}
+
+            <!-- Цикл по полях форми (Username та Password) -->
+            {% for field in form %}
+                <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+                    <label class="form-label" style="display: block; font-weight: 600; margin-bottom: 5px; color: #444;">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span class="form-error" style="color: #d9534f; font-size: 12px; margin-top: 5px; font-weight: 500; display: block;">{{ field.errors|join:", " }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-auth" style="width: 100%; padding: 12px; background-color: #5cb85c; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;">Увійти</button>
+        </form>
+
+        <div class="auth-extra-links" style="text-align: center; margin-top: 20px; font-size: 14px; color: #666;">
+            <p class="auth-switch">
+                <a href="{% url 'password_reset' %}" style="color: #5cb85c; text-decoration: none; font-weight: bold;">Забули пароль?</a>
+            </p>
+            <p class="auth-switch" style="margin-top: 10px;">
+                Немає акаунту? <a href="{% url 'signup' %}" style="color: #5cb85c; text-decoration: none; font-weight: bold;">Зареєструватись</a>
+            </p>
         </div>
-
-        <div class="auth-form-group">
-            <label>Пароль</label>
-            <input type="password" name="password" class="form-input" required>
-        </div>
-
-        <button type="submit" class="btn-buy btn-auth">Увійти</button>
-    </form>
-
-    <p class="auth-links">
-        Немає акаунту? <a href="{% url 'signup' %}">Зареєструватись</a>
-    </p>
+    </div>
 </div>
 {% endblock %}

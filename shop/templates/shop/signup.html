@@ -1,27 +1,51 @@
 {% extends 'shop/base.html' %}
 
+{% block title %}Реєстрація{% endblock %}
+
 {% block content %}
 <div class="auth-wrapper">
-    <h1 class="section-title auth-title">Реєстрація</h1>
+    <div class="auth-card">
+        <div class="auth-icon">🌱</div>
+        <h1 class="auth-title">Реєстрація</h1>
+        <p class="auth-subtitle">Створіть акаунт, щоб накопичувати бонуси та бачити історію замовлень</p>
 
-    <form method="post" class="review-form">
-        {% csrf_token %}
-
-        {% for field in form %}
-            <div class="auth-form-group">
-                <label>{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <span class="form-error-msg">{{ field.errors|striptags }}</span>
-                {% endif %}
+        <!-- Блок для загальних помилок форми -->
+        {% if form.non_field_errors %}
+            <div class="auth-error-summary" style="background: #fdf2f2; border: 1px solid #f8d7da; color: #721c24; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-size: 14px;">
+                {% for error in form.non_field_errors %}
+                    <p style="margin: 0;">{{ error }}</p>
+                {% endfor %}
             </div>
-        {% endfor %}
+        {% endif %}
 
-        <button type="submit" class="btn-buy btn-auth">Створити акаунт</button>
-    </form>
+        <form method="post" class="auth-form">
+            {% csrf_token %}
 
-    <p class="auth-links">
-        Вже є акаунт? <a href="{% url 'login' %}">Увійти</a>
-    </p>
+            {% for field in form %}
+                <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+                    <label class="form-label" for="{{ field.id_for_label }}" style="display: block; font-weight: 600; margin-bottom: 5px; color: #444;">{{ field.label }}</label>
+
+                    {# Рендеримо поле #}
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="form-error" style="color: #d9534f; font-size: 12px; margin-top: 5px; font-weight: 500;">
+                            {{ field.errors|join:", " }}
+                        </div>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <small class="form-hint" style="color: #888; font-size: 11px; display: block; margin-top: 5px; line-height: 1.2;">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-auth" style="width: 100%; padding: 12px; background-color: #5cb85c; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;">Зареєструватись</button>
+        </form>
+
+        <p class="auth-switch" style="text-align: center; margin-top: 20px; font-size: 14px; color: #666;">
+            Вже маєте акаунт? <a href="{% url 'login' %}" style="color: #5cb85c; text-decoration: none; font-weight: bold;">Увійти</a>
+        </p>
+    </div>
 </div>
 {% endblock %}

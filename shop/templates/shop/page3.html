@@ -1,21 +1,68 @@
 {% extends 'shop/base.html' %}
 {% block content %}
-<div class="static-page-box">
-    <h1 class="page-title">Зворотній зв'язок</h1>
 
-    <div class="contact-grid">
-        <div class="contact-info">
-            <p><span class="c-icon">📍</span> <strong>Адреса:</strong> м. Луцьк, вул. Соборності, 14</p>
-            <p><span class="c-icon">📞</span> <strong>Телефон:</strong> +38 (099) 646-18-61</p>
-            <p><span class="c-icon">📧</span> <strong>Email:</strong> info@agris.ua</p>
-            <p><span class="c-icon">⏰</span> <strong>Графік роботи:</strong> Пн-Пт 09:00 - 18:00, Сб-Нд - Вихідні</p>
+<div style="background: white; padding: 40px 35px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+    <h1 style="color: #2c3e50; margin-top: 0; margin-bottom: 30px; font-size: 28px; border-bottom: 3px solid #e67e22; padding-bottom: 15px; font-weight: 800;">
+        Зворотній зв'язок та контакти 📞
+    </h1>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+
+        <!-- КОНТАКТНА ІНФОРМАЦІЯ -->
+        <div>
+            <p style="font-size: 16px; color: #555; margin-bottom: 25px; line-height: 1.6;">
+                У вас виникли запитання щодо товару, доставки чи співпраці? Наші менеджери з радістю вас проконсультують! Зв'яжіться з нами будь-яким зручним для вас способом.
+            </p>
+
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px;">
+                <li style="display: flex; align-items: flex-start; gap: 15px;">
+                    <div style="background: #fdf2e9; color: #d35400; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">📍</div>
+                    <div>
+                        <strong style="display: block; color: #2c3e50; font-size: 15px; margin-bottom: 3px;">Адреса магазину:</strong>
+                        <span style="color: #555; font-size: 15px;">м. Луцьк, вул. Соборності, 14</span>
+                    </div>
+                </li>
+
+                <li style="display: flex; align-items: flex-start; gap: 15px;">
+                    <div style="background: #e8f4fd; color: #2980b9; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">📞</div>
+                    <div>
+                        <strong style="display: block; color: #2c3e50; font-size: 15px; margin-bottom: 3px;">Телефон:</strong>
+                        <a href="tel:+380996461861" style="color: #2980b9; font-size: 18px; font-weight: bold; text-decoration: none;">+38 (099) 646-18-61</a>
+                    </div>
+                </li>
+
+                <li style="display: flex; align-items: flex-start; gap: 15px;">
+                    <div style="background: #eafaf1; color: #27ae60; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">✉️</div>
+                    <div>
+                        <strong style="display: block; color: #2c3e50; font-size: 15px; margin-bottom: 3px;">Email для листів:</strong>
+                        <a href="mailto:info@agris.ua" style="color: #27ae60; font-size: 16px; font-weight: bold; text-decoration: none;">info@agris.ua</a>
+                    </div>
+                </li>
+
+                <li style="display: flex; align-items: flex-start; gap: 15px;">
+                    <div style="background: #f4f6f8; color: #34495e; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">⏰</div>
+                    <div>
+                        <strong style="display: block; color: #2c3e50; font-size: 15px; margin-bottom: 3px;">Графік роботи:</strong>
+                        <span style="color: #555; font-size: 15px;"><b>Пн-Пт:</b> 09:00 - 18:00<br><b>Сб-Нд:</b> Вихідні дні</span>
+                    </div>
+                </li>
+            </ul>
         </div>
 
-        <div class="contact-map">
-            <div class="map-placeholder">
-                🗺️ Тут знаходиться магазин AGRIS
-            </div>
+        <!-- КАРТА (Google Maps) -->
+        <div style="border-radius: 12px; overflow: hidden; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); height: 100%; min-height: 350px;">
+            <!-- Вставив реальні координати Луцька, просп. Соборності 14 -->
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2524.321689369335!2d25.358249676883296!3d50.75114756565158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x472599e8d4cf7af3%3A0x7d678a2e5c8e3a2c!2z0L_RgNC-0YHQv9C10LrRgiDQodC-0LHQvtGA0L3QvtGB0YLRliwgMTQsINCb0YPRhtGM0LosINCS0L7Qu9C40L3RgdGM0LrQsCDQvtCx0LvQsNGB0YLRjCwgNDMwMDA!5e0!3m2!1suk!2sua!4v1715603123456!5m2!1suk!2sua"
+                width="100%"
+                height="100%"
+                style="border:0; min-height: 350px;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
+
     </div>
 </div>
+
 {% endblock %}

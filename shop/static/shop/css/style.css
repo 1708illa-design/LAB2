@@ -30,12 +30,70 @@ body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: 
 .main-nav a { color: var(--text-gray); text-decoration: none; padding: 20px 15px; font-size: 13px; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
 .main-nav a:hover { color: var(--agro-green); background: #f9f9f9; }
 
-/* --- ПОВІДОМЛЕННЯ --- */
-.messages-container { max-width: 1300px; margin: 20px auto 0; padding: 0 15px; box-sizing: border-box; }
-.message { padding: 15px 20px; border-radius: 8px; margin-bottom: 10px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+/* === СПЛИВАЮЧІ ПОВІДОМЛЕННЯ (Toasts) === */
+.messages-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.message {
+    position: relative;
+    overflow: hidden; /* Щоб смужка не вилазила за рамки */
+    pointer-events: auto;
+    min-width: 280px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slideIn 0.4s ease forwards;
+    margin: 0 !important;
+    padding: 15px 20px 18px 20px; /* Відступ знизу для смужки */
+    font-weight: 600;
+}
+
+/* Кольори повідомлень */
 .message-success { background-color: #d4edda; color: #155724; border-left: 5px solid #28a745; }
 .message-info { background-color: #d1ecf1; color: #0c5460; border-left: 5px solid #17a2b8; }
 .message-error { background-color: #f8d7da; color: #721c24; border-left: 5px solid #dc3545; }
+
+/* === АНІМОВАНА СМУЖКА ЧАСУ === */
+.message::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    animation: timeBarShrink 3s linear forwards;
+}
+
+/* Кольори смужки під тип повідомлення */
+.message-success::after { background-color: #28a745; }
+.message-info::after { background-color: #17a2b8; }
+.message-error::after { background-color: #dc3545; }
+
+@keyframes timeBarShrink {
+    0% { width: 100%; }
+    100% { width: 0%; }
+}
+
+@keyframes slideIn {
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.message.fade-out {
+    animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-10px); }
+}
 
 /* --- КАРКАС --- */
 .container { display: flex; padding: 30px 15px; gap: 30px; flex: 1; max-width: 1300px; margin: 0 auto; width: 100%; box-sizing: border-box; }
@@ -44,6 +102,22 @@ body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: 
 .sidebar-item { padding: 12px 20px; border-bottom: 1px solid #eee; color: var(--text-gray); text-decoration: none; display: block; transition: 0.3s; }
 .sidebar-item:hover { background: #f1f8ef; color: var(--agro-green); padding-left: 25px; }
 .main-content { flex: 1; min-width: 0; }
+
+/* --- БОКОВЕ МЕНЮ --- */
+summary { list-style: none !important; }
+summary::-webkit-details-marker { display: none !important; }
+summary::marker { display: none !important; content: "" !important; }
+summary:focus { outline: none; }
+.sidebar-item-summary { display: flex; justify-content: space-between; align-items: center; padding: 0; cursor: pointer; border-bottom: 1px solid #eee; background-color: #fff; transition: background-color 0.2s; font-weight: bold; color: var(--dark-green); }
+.sidebar-item-summary:hover { background-color: #f9f9f9; }
+.summary-content { display: flex; align-items: center; gap: 10px; padding: 12px 15px; flex-grow: 1; }
+.category-link { text-decoration: none; color: #333; font-weight: 600; font-size: 16px; }
+.category-link:hover { color: var(--agro-green); }
+.sidebar-subcategories { background-color: #fcfcfc; border-left: 3px solid #eee; margin-left: 15px; }
+.sidebar-item.sub-item { font-size: 14px; padding: 10px 15px 10px 45px !important; color: #555; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+.sidebar-item.sub-item:hover { background: #f1f8ef; padding-left: 50px !important; }
+.single-item { font-weight: 600; color: #333; }
+.active-link { color: var(--agro-green) !important; font-weight: bold; background-color: #e9f5ec; }
 
 /* --- ТОВАРИ --- */
 .section-title { color: #333; border-bottom: 2px solid var(--agro-green); padding-bottom: 10px; margin-top: 0; margin-bottom: 25px; }
@@ -128,118 +202,6 @@ body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background-color: 
 .btn-update { background: #f1f3f5; border: 1px solid #ced4da; padding: 6px 10px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 14px; }
 .btn-update:hover { background: #e2e6ea; }
 
-/* =========================================
-   ФУТЕР (РОЗДІЛЕНИЙ НА ВЕРХ ТА НИЗ)
-   ========================================= */
-.site-footer {
-    background: #2c3e50;
-    color: #ecf0f1;
-    padding: 40px 20px 20px;
-    margin-top: auto;
-}
-
-.footer-inner {
-    max-width: 1300px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column; /* Вертикально: поверх над поверхом */
-}
-
-/* ВЕРХНІЙ ПОВЕРХ: Розсилка */
-.footer-top {
-    display: flex;
-    justify-content: flex-end; /* Відкидаємо блок розсилки вправо */
-    width: 100%;
-    margin-bottom: 40px; /* Відступ до нижньої лінії */
-}
-
-.newsletter-block {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    width: 100%;
-    max-width: 400px;
-}
-
-.newsletter-title {
-    margin: 0;
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.newsletter-form {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-}
-
-.newsletter-input {
-    flex: 1;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    outline: none;
-}
-
-.newsletter-btn {
-    background: var(--agro-green);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.newsletter-btn:hover {
-    background: var(--dark-green);
-}
-
-/* НИЖНІЙ ПОВЕРХ: Копірайт */
-.footer-bottom {
-    width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Легка лінія розділення */
-    padding-top: 20px;
-}
-
-.footer-copy {
-    margin: 0;
-    color: #bdc3c7;
-    font-size: 14px;
-    text-align: center; /* ТЕПЕР КОПІРАЙТ ПО ЦЕНТРУ! */
-}
-
-/* Адаптивність для телефонів */
-@media (max-width: 768px) {
-    .footer-top {
-        justify-content: center; /* Центруємо розсилку на мобільних */
-    }
-    .newsletter-block {
-        align-items: center;
-    }
-    .footer-copy {
-        text-align: center; /* Центруємо текст на мобільних */
-    }
-}
-
-/* --- БОКОВЕ МЕНЮ --- */
-summary { list-style: none !important; }
-summary::-webkit-details-marker { display: none !important; }
-summary::marker { display: none !important; content: "" !important; }
-summary:focus { outline: none; }
-.sidebar-item-summary { display: flex; justify-content: space-between; align-items: center; padding: 0; cursor: pointer; border-bottom: 1px solid #eee; background-color: #fff; transition: background-color 0.2s; font-weight: bold; color: var(--dark-green); }
-.sidebar-item-summary:hover { background-color: #f9f9f9; }
-.summary-content { display: flex; align-items: center; gap: 10px; padding: 12px 15px; flex-grow: 1; }
-.category-link { text-decoration: none; color: #333; font-weight: 600; font-size: 16px; }
-.category-link:hover { color: var(--agro-green); }
-.sidebar-subcategories { background-color: #fcfcfc; border-left: 3px solid #eee; margin-left: 15px; }
-.sidebar-item.sub-item { font-size: 14px; padding: 10px 15px 10px 45px !important; color: #555; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
-.sidebar-item.sub-item:hover { background: #f1f8ef; padding-left: 50px !important; }
-.single-item { font-weight: 600; color: #333; }
-.active-link { color: var(--agro-green) !important; font-weight: bold; background-color: #e9f5ec; }
-
 /* ПАГІНАЦІЯ */
 .pagination-wrapper { margin-top: 50px; text-align: center; padding-bottom: 40px; }
 .pagination-box { display: inline-block; background: #fff; padding: 10px 25px; border-radius: 50px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -254,16 +216,169 @@ summary:focus { outline: none; }
 .nav-logout-link { color: #e74c3c !important; }
 .nav-signup-link { background: var(--agro-green); color: white !important; border-radius: 6px; margin: 10px 5px; padding: 8px 16px !important; }
 .nav-signup-link:hover { background: var(--dark-green) !important; color: white !important; }
+
 .header-user-block { display: flex; align-items: center; gap: 10px; }
 .user-greeting { font-weight: bold; font-size: 14px; }
 .user-bonus-badge { background: #f39c12; color: white; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: bold; }
+
 .auth-wrapper { display: flex; justify-content: center; padding: 40px 15px; }
+.auth-card { background: white; border-radius: 16px; padding: 50px 45px; width: 100%; max-width: 460px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); text-align: center; }
+.auth-icon { font-size: 50px; margin-bottom: 10px; }
+.auth-title { font-size: 26px; color: var(--dark-green); margin: 0 0 8px; }
+.auth-subtitle { color: #777; font-size: 14px; margin-bottom: 30px; }
+.auth-form { text-align: left; }
+.form-label { display: block; font-weight: 600; margin-bottom: 6px; color: #444; font-size: 14px; }
+.auth-form input { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; box-sizing: border-box; transition: 0.2s; font-family: inherit; }
+.auth-form input:focus { border-color: var(--agro-green); outline: none; box-shadow: 0 0 0 3px rgba(94,177,74,0.15); }
+.form-hint { display: block; font-size: 11px; color: #aaa; margin-top: 4px; }
+.btn-auth { width: 100%; padding: 14px; background: var(--agro-green); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+.btn-auth:hover { background: var(--dark-green); }
+.auth-switch { margin-top: 20px; font-size: 14px; color: #555; }
+.auth-switch a { color: var(--agro-green); font-weight: bold; text-decoration: none; }
 
 /* --- КАБІНЕТ --- */
 .cabinet-hero { display: flex; justify-content: space-between; align-items: flex-start; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+.cabinet-title { font-size: 26px; color: var(--dark-green); margin: 0 0 5px; }
+.cabinet-username { color: #777; margin: 0; font-size: 15px; }
 .cabinet-bonus-card { text-align: center; background: linear-gradient(135deg, #f39c12, #e67e22); color: white; padding: 20px 30px; border-radius: 12px; min-width: 220px; }
+.bonus-amount { font-size: 30px; font-weight: bold; }
+.bonus-label { font-size: 13px; opacity: 0.85; margin-bottom: 15px; }
+.vip-bar-track { background: rgba(255,255,255,0.3); border-radius: 50px; height: 10px; overflow: hidden; }
+.vip-bar-fill { background: white; height: 100%; border-radius: 50px; transition: width 0.6s ease; }
+.vip-hint { font-size: 12px; margin: 8px 0 0; opacity: 0.9; }
+.vip-achieved { font-weight: bold; }
+
 .orders-wrapper { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 .status-badge { padding: 5px 12px; border-radius: 50px; font-size: 13px; font-weight: bold; }
 .status-new  { background: #fff3cd; color: #856404; }
 .status-sent { background: #cce5ff; color: #004085; }
 .status-done { background: #d4edda; color: #155724; }
+.order-items-row td { padding: 8px 15px 15px !important; background: #f9fafb; border-bottom: 2px solid #eee; }
+.order-item-tag { display: inline-block; background: #e9f5ec; color: var(--dark-green); padding: 4px 12px; border-radius: 50px; font-size: 13px; margin: 3px; font-weight: 600; }
+.status-select { padding: 7px 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; }
+
+/* --- СТИЛІ ОФОРМЛЕННЯ ЗАМОВЛЕННЯ (PREMIUM) --- */
+.checkout-main-container { background-color: #e9f5e9; padding: 40px 15px; min-height: 80vh; }
+.checkout-page-title { text-align: center; color: #2d5a27; margin-bottom: 30px; font-size: 2.2rem; }
+.checkout-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px; max-width: 1200px; margin: 0 auto; }
+.checkout-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); height: fit-content; }
+.card-title, .form-section-header { font-size: 1.3rem; font-weight: 800; color: #333; margin-bottom: 20px; border-left: 5px solid #5eb14a; padding-left: 15px; }
+.form-section-header { margin-top: 25px; }
+
+.modern-input { width: 100%; padding: 12px 15px; border: 2px solid #f0f0f0; border-radius: 10px; font-size: 15px; box-sizing: border-box; transition: 0.3s; background: #fafafa; }
+.modern-input:focus { border-color: #5eb14a; background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(94, 177, 74, 0.1); }
+.input-group-row { display: flex; gap: 15px; margin-bottom: 15px; }
+.custom-label { display: block; font-size: 13px; font-weight: bold; color: #666; margin-bottom: 5px; }
+
+.btn-checkout-finalize { background: linear-gradient(135deg, #ff7e00, #ff5400); color: white; width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 30px; box-shadow: 0 6px 20px rgba(255, 84, 0, 0.3); transition: 0.3s; }
+.btn-checkout-finalize:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255, 84, 0, 0.4); }
+
+.mini-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #eee; }
+.mini-item-name { font-weight: 600; display: block; }
+.mini-item-qty { font-size: 13px; color: #888; }
+.grand-total-box { margin-top: 25px; text-align: right; font-size: 1.4rem; font-weight: 900; }
+.price-num { color: #e74c3c; }
+
+@media (max-width: 900px) {
+    .checkout-grid { grid-template-columns: 1fr; }
+    .items-summary { order: 2; }
+    .form-section { order: 1; }
+}
+
+/* --- НОВА ПОШТА ТА АВТОКОМПЛІТ --- */
+.suggestions-box, .autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    z-index: 9999;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.suggestion-item, .suggestion {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 14px;
+    color: #333;
+    transition: background 0.2s ease;
+}
+
+.suggestion-item:hover, .suggestion:hover {
+    background: #e8f4fd;
+    color: #2980b9;
+}
+
+.suggestion-item-empty {
+    padding: 12px 15px;
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+}
+
+.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+.form-group { flex: 1; position: relative; }
+.form-group.half { flex: 0.5; }
+
+/* =========================================
+   ФУТЕР (РОЗДІЛЕНИЙ НА ВЕРХ ТА НИЗ)
+   ========================================= */
+.site-footer {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 40px 20px 20px;
+    margin-top: auto;
+}
+
+.footer-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.newsletter-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.newsletter-title { margin: 0; font-weight: bold; font-size: 16px; }
+.newsletter-form { display: flex; gap: 10px; width: 100%; }
+.newsletter-input { flex: 1; padding: 10px 15px; border: none; border-radius: 6px; outline: none; }
+.newsletter-btn { background: var(--agro-green); color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.newsletter-btn:hover { background: var(--dark-green); }
+
+.footer-bottom {
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
+
+.footer-copy {
+    margin: 0;
+    color: #bdc3c7;
+    font-size: 14px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .footer-top { justify-content: center; }
+    .newsletter-block { align-items: center; }
+    .footer-copy { text-align: center; }
+}

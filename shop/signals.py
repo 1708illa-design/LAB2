@@ -3,15 +3,15 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from .models import Profile
 
-
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    """Автоматично створює Profile при створенні User"""
+    """Автоматично створює Profile при створенні User (реєстрації)"""
     if created:
         Profile.objects.create(user=instance)
 
-
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
-    """Зберігає Profile при збереженні User"""
-    instance.profile.save()
+    """Зберігає Profile щоразу, коли оновлюється User"""
+    # Додано перевірку, щоб уникнути помилок, якщо профілю раптом немає
+    if hasattr(instance, 'profile'):
+        instance.profile.save()

@@ -3,7 +3,6 @@ from .models import Product
 
 CART_SESSION_KEY = 'cart'
 
-
 class Cart:
     def __init__(self, request):
         self.session = request.session
@@ -12,12 +11,13 @@ class Cart:
             cart = self.session[CART_SESSION_KEY] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1, override_quantity=False):
+    def add(self, product, quantity=1, update_quantity=False):
         product_id = str(product.id)
         if product_id not in self.cart:
+            # Зберігаємо ціну ТІЛЬКИ як рядок для JSON
             self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
 
-        if override_quantity:
+        if update_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
             self.cart[product_id]['quantity'] += quantity
@@ -34,21 +34,27 @@ class Cart:
 
     def __iter__(self):
         product_ids = self.cart.keys()
+        # Отримуємо всі товари з бази одним запитом
         products = Product.objects.filter(id__in=product_ids)
-        cart = self.cart.copy()
-        for product in products:
-            cart[str(product.id)]['product'] = product
-        for item in cart.values():
-            item['price'] = Decimal(item['price'])
-            item['total_price'] = item['price'] * item['quantity']
-            yield item
+        product_dict = {str(p.id): p for p in products}
+
+        # Копіюємо дані, не псуючи оригінальну сесію
+        for product_id, item in self.cart.items():
+            # Робимо копію кожного елемента окремо!
+            display_item = item.copy()
+            display_item['product'] = product_dict.get(product_id)
+            display_item['price'] = Decimal(display_item['price'])
+            display_item['total_price'] = display_item['price'] * display_item['quantity']
+            yield display_item
 
     def __len__(self):
         return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):
+        # Розраховуємо суму, завжди перетворюючи рядок у Decimal "на льоту"
         return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())
 
     def clear(self):
-        del self.session[CART_SESSION_KEY]
-        self.save()
+        if CART_SESSION_KEY in self.session:
+            del self.session[CART_SESSION_KEY]
+            self.save()
