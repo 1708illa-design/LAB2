@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.core.mail import send_mass_mail
+from django.conf import settings
 from .models import (
-    Category, Product, Review, Newsletter,
+    Category, Product, Review, Newsletter, NewsletterCampaign,
     Profile, Order, OrderItem, SiteConfiguration
 )
 
@@ -59,12 +61,57 @@ class ReviewAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
 
 
-# --- ПІДПИСНИКИ ---
+# --- ПІДПИСНИКИ (ОНОВЛЕНО) ---
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ('email', 'subscribed_at')
+    list_display = ('email', 'created_at', 'is_active')
     search_fields = ('email',)
-    readonly_fields = ('subscribed_at',)
+    list_filter = ('is_active',)
+    readonly_fields = ('created_at',)
+
+
+# --- МАСОВА РОЗСИЛКА (НОВЕ) ---
+@admin.register(NewsletterCampaign)
+class NewsletterCampaignAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'created_at', 'sent')
+    readonly_fields = ('sent', 'created_at')
+
+    def save_model(self, request, obj, form, change):
+        is_new = obj.pk is None  # Перевіряємо, чи це нова розсилка, а не редагування старої
+        super().save_model(request, obj, form, change)
+
+        # Якщо ми щойно створили нову розсилку — відправляємо листи!
+        if is_new and not obj.sent:
+            # Беремо всі пошти активних підписників
+            subscribers = Newsletter.objects.filter(is_active=True).values_list('email', flat=True)
+
+            if subscribers:
+                # Офіційний шаблон для листів
+                official_message = f"""Вітаємо! Це офіційне повідомлення від магазину AGRIS 🌱
+
+{obj.message}
+
+---
+З повагою,
+Ваш надійний партнер — Агромагазин AGRIS.
+📞 0 (99) 646-18-61
+📍 м. Луцьк, вул. Соборності, 14
+
+Ви отримали цей лист, оскільки підписані на нашу розсилку.
+"""
+                # Формуємо пачку листів
+                messages = tuple(
+                    (obj.subject, official_message, settings.DEFAULT_FROM_EMAIL, [email])
+                    for email in subscribers
+                )
+
+                try:
+                    send_mass_mail(messages, fail_silently=False)
+                    # Відмічаємо, що розсилка успішно відправлена
+                    obj.sent = True
+                    obj.save()
+                except Exception as e:
+                    print(f"Помилка масової розсилки: {e}")
 
 
 # --- ПРОФІЛІ ---

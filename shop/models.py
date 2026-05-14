@@ -125,8 +125,6 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Користувач")
     last_name = models.CharField(max_length=50, verbose_name="Прізвище")
     first_name = models.CharField(max_length=50, verbose_name="Ім'я")
-
-    # === ОСЬ ЦЕ ПОЛЕ ВИРІШУЄ ПРОБЛЕМУ З ЧЕКАУТОМ ===
     middle_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="По батькові")
 
     phone = models.CharField(max_length=20, verbose_name="Телефон")
@@ -166,7 +164,7 @@ class OrderItem(models.Model):
         verbose_name_plural = "Товари у замовленні"
 
 
-# --- ВІДГУКИ ТА РОЗСИЛКА ---
+# --- ВІДГУКИ ---
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews', verbose_name="Товар")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Користувач")
@@ -177,6 +175,29 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Створено о")
 
 
+# --- РОЗСИЛКА ТА КАМПАНІЇ ---
 class Newsletter(models.Model):
-    email = models.EmailField(unique=True, verbose_name="Email")
-    subscribed_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата підписки")
+    email = models.EmailField(unique=True, verbose_name="Email підписника")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата підписки")
+    is_active = models.BooleanField(default=True, verbose_name="Активна підписка")
+
+    class Meta:
+        verbose_name = "Підписник"
+        verbose_name_plural = "Підписники (Розсилка)"
+
+    def __str__(self):
+        return self.email
+
+
+class NewsletterCampaign(models.Model):
+    subject = models.CharField(max_length=255, verbose_name="Тема листа")
+    message = models.TextField(verbose_name="Текст листа (основна частина)")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата створення")
+    sent = models.BooleanField(default=False, verbose_name="Відправлено")
+
+    class Meta:
+        verbose_name = "Масова розсилка"
+        verbose_name_plural = "Масові розсилки"
+
+    def __str__(self):
+        return self.subject

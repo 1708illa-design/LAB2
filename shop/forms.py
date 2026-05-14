@@ -21,13 +21,17 @@ class ReviewForm(forms.ModelForm):
         }
 
 
-# --- ФОРМА ПІДПИСКИ ---
+# --- ФОРМА ПІДПИСКИ НА РОЗСИЛКУ ---
 class NewsletterForm(forms.ModelForm):
     class Meta:
         model = Newsletter
         fields = ['email']
         widgets = {
-            'email': forms.EmailInput(attrs={'class': 'newsletter-input', 'placeholder': 'Ваш email...'}),
+            'email': forms.EmailInput(attrs={
+                'class': 'newsletter-input',
+                'placeholder': 'Ваш email...',
+                'required': True
+            }),
         }
 
 
@@ -49,12 +53,13 @@ class SignUpForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Додаємо всім полям клас для красивого відображення
         for field in self.fields.values():
             field.widget.attrs.setdefault('class', 'form-input')
 
         self.fields['password1'].label = "Пароль"
         self.fields['password2'].label = "Підтвердження"
-        self.fields['password1'].help_text = "Мінімум 8 символів, не тільки цифри."
+        self.fields['password1'].help_text = "Мінімум 8 символів."
 
     def save(self, commit=True):
         # 1. Зберігаємо базового користувача
@@ -65,7 +70,7 @@ class SignUpForm(UserCreationForm):
         if commit:
             # 2. Зберігаємо користувача в базу
             user.save()
-            # 3. НАДІЙНО створюємо профіль (без сигналів)
+            # 3. НАДІЙНО створюємо профіль (кешбек-рахунок)
             Profile.objects.get_or_create(user=user)
 
         return user
@@ -81,6 +86,7 @@ class OrderForm(forms.Form):
                                   widget=forms.TextInput(attrs={'placeholder': 'По батькові', 'class': 'modern-input'}))
     phone = forms.CharField(label="Телефон", widget=forms.TextInput(
         attrs={'placeholder': '+380...', 'class': 'modern-input phone-mask'}))
+
     city = forms.CharField(required=False, widget=forms.TextInput(
         attrs={'id': 'city-input', 'autocomplete': 'off', 'class': 'modern-input'}))
     region = forms.CharField(required=False, widget=forms.TextInput(
@@ -91,7 +97,7 @@ class OrderForm(forms.Form):
     use_bonuses = forms.BooleanField(required=False, label="Списати бонуси для знижки")
 
 
-# --- ФОРМА ПРОФІЛЮ (ДЛЯ КАБІНЕТУ) ---
+# --- ФОРМА ПРОФІЛЮ (ДЛЯ ОСОБИСТОГО КАБІНЕТУ) ---
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
@@ -117,6 +123,7 @@ class ProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Автоматично додаємо клас 'modern-input' всім видимим полям
         for field in self.fields.values():
             if not isinstance(field.widget, forms.HiddenInput):
                 field.widget.attrs.setdefault('class', 'modern-input')

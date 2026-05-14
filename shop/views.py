@@ -6,6 +6,8 @@ from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
 from decimal import Decimal
 
 from .models import Product, Category, Review, Newsletter, Order, OrderItem, Profile
@@ -69,20 +71,49 @@ def product_detail(request, product_id):
     return render(request, 'shop/product_detail.html', ctx)
 
 
+# ─── РОЗСИЛКА (З ВІТАЛЬНИМ ЛИСТОМ) ───────────────────────────────────────
 @require_POST
 def subscribe_newsletter(request):
     form = NewsletterForm(request.POST)
     if form.is_valid():
-        obj, created = Newsletter.objects.get_or_create(email=form.cleaned_data['email'])
+        email = form.cleaned_data['email']
+        obj, created = Newsletter.objects.get_or_create(email=email)
+
         if created:
-            messages.success(request, '✅ Підписку оформлено!')
+            # === ОФІЦІЙНИЙ ПРИВІТАЛЬНИЙ ЛИСТ ===
+            subject = '🌱 Вітаємо в родині AGRIS! Підписка успішна'
+            message = f"""Вітаємо!
+
+Ви успішно прив'язали свою пошту {email} до нашої системи.
+
+Дякуємо, що погодилися отримувати наші новини. Тепер ви першими дізнаватиметесь про:
+🌾 Свіжі надходження насіння
+🔥 Секретні акції та знижки
+📚 Корисні поради для вашого саду та городу
+
+---
+З повагою,
+Команда офіційного агромагазину AGRIS.
+м. Луцьк, вул. Соборності, 14
+"""
+            try:
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email], fail_silently=False)
+                messages.success(request, '✅ Підписку оформлено! Ми надіслали вам привітального листа.')
+            except Exception:
+                messages.success(request, '✅ Підписку оформлено! (Лист не відправлено через локальні налаштування)')
         else:
-            messages.info(request, '📬 Цей email вже підписано.')
+            # Якщо людина відписувалась, а тепер знову підписалась
+            if not obj.is_active:
+                obj.is_active = True
+                obj.save()
+                messages.success(request, '✅ Вашу підписку відновлено!')
+            else:
+                messages.info(request, '📬 Цей email вже підписано.')
+
     return redirect(request.META.get('HTTP_REFERER', 'main'))
 
 
 # ─── КОШИК (З ПІДТРИМКОЮ AJAX) ───────────────────────────────────────
-
 @require_POST
 def cart_add(request, product_id):
     cart = Cart(request)
@@ -125,7 +156,6 @@ def cart_detail(request):
 
 
 # ─── ЧЕКАУТ (З БОНУСАМИ) ─────────────────────────────────────────────
-
 @login_required
 @transaction.atomic
 def checkout(request):
@@ -197,7 +227,6 @@ def checkout(request):
 
 
 # ─── КАБІНЕТ (ФІЛЬТРАЦІЯ ТА ПАГІНАЦІЯ) ────────────────────────
-
 @login_required
 def cabinet(request):
     profile, _ = Profile.objects.get_or_create(user=request.user)
@@ -240,40 +269,37 @@ def cabinet(request):
 @login_required
 @require_POST
 def order_change_status(request, order_id):
-    """Зміна статусу (тільки стафф) + нарахування 5% бонусів."""
+    """Зміна статусу (тільки стафф) + автоматичне нарахування бонусів."""
     if not request.user.is_staff:
         return redirect('main')
 
     order = get_object_or_404(Order, id=order_id)
     new_status = request.POST.get('status')
+
+    # Перевіряємо, чи саме в цей момент статус змінюється на "done"
+    just_awarded = (new_status == 'done' and not order.bonuses_awarded)
+
     order.status = new_status
-
-    # Нарахування 5% бонусу при завершенні замовлення
-    if new_status == 'done' and not order.bonuses_awarded:
-        user_profile, _ = Profile.objects.get_or_create(user=order.user)
-        earned_bonus = order.total_price * Decimal('0.05')
-        user_profile.bonuses += earned_bonus
-        user_profile.save()
-
-        order.bonuses_awarded = True
-        messages.success(request, f'Користувачу нараховано кешбек: {earned_bonus:.2f} ₴!')
-
+    # ВИКЛИК .save() АВТОМАТИЧНО НАРАХУЄ БОНУСИ ЧЕРЕЗ models.py!
     order.save()
+
+    if just_awarded:
+        earned_bonus = order.total_price * Decimal('0.05')
+        messages.success(request, f'Замовлення №{order.id} виконано! Клієнту нараховано кешбек: {earned_bonus:.2f} ₴ 🎁')
+    else:
+        messages.success(request, f'Статус замовлення №{order.id} успішно змінено.')
+
     return redirect(request.META.get('HTTP_REFERER', 'cabinet'))
 
 
 # ─── РЕЄСТРАЦІЯ ТА СТАТИЧНІ СТОРІНКИ ──────────────────────────────────
-
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-
             # ЯВНЕ І БЕЗПЕЧНЕ СТВОРЕННЯ ПРОФІЛЮ
-            # (get_or_create гарантує, що не буде IntegrityError)
             Profile.objects.get_or_create(user=user)
-
             login(request, user)
             return redirect('signup_success')
     else:
